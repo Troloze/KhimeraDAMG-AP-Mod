@@ -1,0 +1,27 @@
+{
+  // GML is C-like. Without a dedicated GameMaker extension installed this gives
+  // usable highlighting for free. If you install a GML extension from the
+  // marketplace, delete this association so the extension's own grammar takes over.
+  "files.associations": {
+    "*.gml": "cpp"
+  },
+
+  "files.watcherExclude": {
+    "**/sprites/**": true,
+    "**/backgrounds/**": true,
+    "**/fonts/**": true,
+    "**/sounds/**": true,
+    "**/dist/**": true
+  },
+  "search.exclude": {
+    "**/*.png": true,
+    "**/*.wav": true,
+    "**/*.ogg": true,
+    "**/dist/**": true
+  },
+
+  "[cpp]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4
+  }
+}

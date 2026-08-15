@@ -1,0 +1,18 @@
+{
+  "Name": "KhimeraMod",
+  "Flags": [],
+  "VerifyStrings": [
+    "Khimera: Destroy all Monster Girls"
+  ],
+  "AssetsDataFilePath": null,
+  "ErrorOnWarnings": true,
+  "ExcludeDirectories": [],
+  "SubProjects": [],
+  "Patches": [],
+  "ExternalFiles": [],
+  "FileCopies": [],
+  "FileDeletes": [],
+  "PreImportScripts": [],
+  "PreAssetImportScripts": [],
+  "PostImportScripts": []
+}

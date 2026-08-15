@@ -1,0 +1,8 @@
+# Build/playtest output - a full copy of the base game plus your rebuilt
+# data.win. Never commit this; it redistributes the original game.
+/dist/
+
+# OS / editor cruft
+Thumbs.db
+.DS_Store
+*.user
