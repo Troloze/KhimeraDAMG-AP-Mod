@@ -17,9 +17,9 @@ You need two things, neither of which lives in this repo:
 
 1. **A legally-owned, unmodified copy of Khimera.** Just the game folder as
    installed (contains `data.win`, `khimera1.exe`, the `.ogg` files, etc).
-2. **UndertaleModTool** — the CLI (required) and, optionally, the GUI (for
+2. **UndertaleModTool version 0.9.1.2** — the CLI (required) and, optionally, the GUI (for
    opening a full merged view / room editing). Get both from the
-   [releases page](https://github.com/UnderminersTeam/UndertaleModTool/releases).
+   [releases page](https://github.com/UnderminersTeam/UndertaleModTool/releases/tag/0.9.1.2).
    You do **not** need the source code or to build anything yourself.
 
 Then set two environment variables once (e.g. in your PowerShell profile), so
@@ -136,7 +136,3 @@ isn't part of this skeleton).
 - **`VerifyStrings`** is a safety check: the build fails with a clear
   *"Wrong game version?"* error if `$env:KHIMERA_SOURCE` doesn't match. Keep
   it pointed at something that uniquely identifies your target game build.
-- **Pin one UndertaleModTool release version** for this project and note it
-  somewhere (e.g. this README) once you pick one. The project file format is
-  actively evolving — a mismatched version between contributors risks a
-  `project.json` that parses differently or not at all.
