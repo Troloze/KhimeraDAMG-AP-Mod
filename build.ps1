@@ -16,12 +16,14 @@
 
 [CmdletBinding()]
 param(
-    [string] $Source = $env:KHIMERA_SOURCE,
-    [string] $Output = "$PSScriptRoot\dist",
-    [string] $Cli    = $(if ($env:UMT_CLI) { $env:UMT_CLI } else { "UndertaleModCli.exe" }),
+    [string] $Source = "D:\Games\Khimera",
+    [string] $Output = "",
+    [string] $Cli    = "D:\UndertaleModTool\CLI\UndertaleModCLI.exe",
     [string] $Exe    = "khimera1.exe",
     [switch] $Run
 )
+
+$Output = Join-Path $PSScriptRoot "\dist"
 
 $ErrorActionPreference = 'Stop'
 
@@ -53,6 +55,15 @@ if (-not (Test-Path $Output)) {
     Write-Host "Creating playtest copy at $Output ..." -ForegroundColor Cyan
     New-Item -ItemType Directory -Path $Output -Force | Out-Null
     Copy-Item -Path (Join-Path $Source '*') -Destination $Output -Recurse -Force
+}
+
+# The retail build calls SteamAPI_RestartAppIfNecessary on boot, which hands
+# control back to Steam and relaunches the *installed* copy - so the playtest
+# build would silently exit and you'd be testing the unmodded game. Dropping
+# the app id next to the exe makes that check a no-op and the copy runs itself.
+$appIdFile = Join-Path $Output 'steam_appid.txt'
+if (-not (Test-Path $appIdFile)) {
+    Set-Content -Path $appIdFile -Value '467380' -NoNewline -Encoding ascii
 }
 
 $destData = Join-Path $Output 'data.win'

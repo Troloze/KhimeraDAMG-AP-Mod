@@ -11,8 +11,8 @@
 
 [CmdletBinding()]
 param(
-    [string] $Source = $env:KHIMERA_SOURCE,
-    [string] $Gui    = $(if ($env:UMT_GUI) { $env:UMT_GUI } else { "UndertaleModTool.exe" })
+    [string] $Source = "D:\Games\Khimera",
+    [string] $Gui    = "D:\UndertaleModTool\UndertaleModTool.exe"
 )
 
 $ErrorActionPreference = 'Stop'

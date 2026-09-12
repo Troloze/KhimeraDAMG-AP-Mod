@@ -1,6 +1,8 @@
 # Build/playtest output - a full copy of the base game plus your rebuilt
 # data.win. Never commit this; it redistributes the original game.
 /dist/
+# A folder where you can dump all source code/images/etc. Do not EVER commit this.
+/source/
 
 # OS / editor cruft
 Thumbs.db
