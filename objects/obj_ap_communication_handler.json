@@ -1,0 +1,55 @@
+{
+  "$type": "GameObject",
+  "DataName": "obj_ap_communication_handler",
+  "Sprite": null,
+  "Visible": false,
+  "Solid": false,
+  "Depth": 0,
+  "Persistent": true,
+  "ParentObject": null,
+  "MaskSprite": null,
+  "UsesPhysics": false,
+  "IsSensor": false,
+  "CollisionShape": "Circle",
+  "Density": 0.5,
+  "Restitution": 0.1,
+  "Group": 0,
+  "LinearDamping": 0.1,
+  "AngularDamping": 0.1,
+  "Friction": 0.2,
+  "Awake": false,
+  "Kinematic": false,
+  "PhysicsVertices": [],
+  "Events": [
+    {
+      "Category": "Create",
+      "Subtype": "",
+      "CodeEntry": "gml_Object_obj_AP_communication_handler_Create_0"
+    },
+    {
+      "Category": "Alarm",
+      "Subtype": "1",
+      "CodeEntry": "gml_Object_obj_AP_communication_handler_Alarm_1"
+    },
+    {
+      "Category": "Alarm",
+      "Subtype": "2",
+      "CodeEntry": "gml_Object_obj_AP_communication_handler_Alarm_2"
+    },
+    {
+      "Category": "Alarm",
+      "Subtype": "0",
+      "CodeEntry": "gml_Object_obj_AP_communication_handler_Alarm_0"
+    },
+    {
+      "Category": "Step",
+      "Subtype": "Step",
+      "CodeEntry": "gml_Object_obj_ap_communication_handler_Step_0"
+    },
+    {
+      "Category": "Other",
+      "Subtype": "User0",
+      "CodeEntry": "gml_Object_obj_AP_communication_handler_Other_10"
+    }
+  ]
+}
