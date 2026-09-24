@@ -1,0 +1,80 @@
+{
+  "$type": "GameObject",
+  "DataName": null,
+  "Sprite": null,
+  "Visible": false,
+  "Solid": false,
+  "Depth": 0,
+  "Persistent": true,
+  "ParentObject": null,
+  "MaskSprite": null,
+  "UsesPhysics": false,
+  "IsSensor": false,
+  "CollisionShape": "Circle",
+  "Density": 0.5,
+  "Restitution": 0.1,
+  "Group": 0,
+  "LinearDamping": 0.1,
+  "AngularDamping": 0.1,
+  "Friction": 0.2,
+  "Awake": false,
+  "Kinematic": false,
+  "PhysicsVertices": [],
+  "Events": [
+    {
+      "Category": "Create",
+      "Subtype": "",
+      "CodeEntry": "ap_manager_startup"
+    },
+    {
+      "Category": "Alarm",
+      "Subtype": "0",
+      "CodeEntry": "ap_manager_communication_observer"
+    },
+    {
+      "Category": "Alarm",
+      "Subtype": "1",
+      "CodeEntry": "ap_manager_communication_writer"
+    },
+    {
+      "Category": "Step",
+      "Subtype": "BeginStep",
+      "CodeEntry": "ap_manager_begin_step"
+    },
+    {
+      "Category": "Step",
+      "Subtype": "Step",
+      "CodeEntry": "ap_manager_step"
+    },
+    {
+      "Category": "Step",
+      "Subtype": "EndStep",
+      "CodeEntry": "ap_manager_end_step"
+    },
+    {
+      "Category": "Other",
+      "Subtype": "GameEnd",
+      "CodeEntry": "ap_manager_on_game_exit"
+    },
+    {
+      "Category": "Other",
+      "Subtype": "RoomStart",
+      "CodeEntry": "ap_manager_room_start"
+    },
+    {
+      "Category": "Other",
+      "Subtype": "User0",
+      "CodeEntry": "ap_manager_load_state"
+    },
+    {
+      "Category": "Other",
+      "Subtype": "User1",
+      "CodeEntry": "ap_manager_inspect_state"
+    },
+    {
+      "Category": "Other",
+      "Subtype": "User2",
+      "CodeEntry": "ap_manager_update_state_from_location"
+    }
+  ]
+}
