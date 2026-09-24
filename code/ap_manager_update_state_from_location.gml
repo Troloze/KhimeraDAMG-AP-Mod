@@ -1,7 +1,7 @@
 // Called when a location released by the server is sent to the game.
 
-if (ds_map_find_value(global.ap_local_location, new_location)) return;
-if (ds_map_find_value(global.ap_acked_location, new_location)) return;
+if (ds_map_find_value(global.ap_local_locations, new_location)) return;
+if (ds_map_find_value(global.ap_acked_locations, new_location)) return;
 
 var stage_id = floor(new_location / 10000000);
 var loc_type = floor(new_location / 100000) % 100;

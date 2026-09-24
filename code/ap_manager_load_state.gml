@@ -224,10 +224,13 @@ for (i = 1; i <= 4; i++) {
 if (!is_undefined(ggal_map)) ds_map_destroy(ggal_map);
 
 // Costumes
+var starting_costume = 1;
 var costume_list = ap_data_get("costumes");
 if (is_undefined(costume_list)) {
     costume_list = ds_list_create();
     for (i = 0; i <= 4; i++) ds_list_add(costume_list, 0);
+    ds_list_replace(costume_list, 0, starting_costume);
+    ds_list_replace(costume_list, starting_costume, 1);
     ap_data_update_list("costumes", costume_list);
     costume_list = ap_data_get("costumes");
 }
@@ -310,6 +313,7 @@ var active_weapons = ap_data_get("weapon_active");
 if (is_undefined(active_weapons)) {
     active_weapons = ds_list_create();
     for (i = 0; i <= 10; i++) ds_list_add(active_weapons, 0);
+    ds_list_replace(active_weapons, 1, 1); // Golem fist is always active.
     ap_data_update_list("weapon_active", active_weapons);
     active_weapons = ap_data_get("weapon_active");
 }

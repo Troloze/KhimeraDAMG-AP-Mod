@@ -25,5 +25,5 @@ connection_status_fade_time = 30;
 connection_status_text[0] = "CONNECTED!";
 connection_status_text[1] = "DISCONNECTED FROM HOST";
 connection_status_text[2] = "DISCONNECTED FROM CLIENT";
-connection_status_hide_counter = -1;
+connection_status_hide_counter = 0;
 connection_status_counter_refill = 90;
