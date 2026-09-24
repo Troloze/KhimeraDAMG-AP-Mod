@@ -555,7 +555,7 @@ if (is_undefined(cshb)) {
 
 if (global.ap_client_connected) {
     if (is_undefined(csc)) global.ap_fully_connected = 0;
-    else global.ap_fully_connected = 1;
+    else global.ap_fully_connected = real(csc);
 } else global.ap_fully_connected = 0;
 
 

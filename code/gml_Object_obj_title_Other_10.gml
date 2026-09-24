@@ -3,9 +3,15 @@ selected = 1;
 Scommand = -1;
 choiceDisplace = 64;
 cursorHeight = 0;
-choice[1] = lMesStart[lang];
-toolTip[1] = lMesStartTool[lang];
-action[1] = 11;
+if (global.ap_state_initialized) {
+    choice[1] = lMesStart[lang];
+    toolTip[1] = lMesStartTool[lang];
+    action[1] = 11;
+} else {
+    choice[1] = lMesDisco[lang];
+    toolTip[1] = lMesDiscoTool[lang];
+    action[1] = -1;
+}
 choice[2] = lMesOptions[lang];
 toolTip[2] = lMesOptionsTool[lang];
 action[2] = 19;

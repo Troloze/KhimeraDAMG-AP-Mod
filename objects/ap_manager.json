@@ -2,7 +2,7 @@
   "$type": "GameObject",
   "DataName": null,
   "Sprite": null,
-  "Visible": false,
+  "Visible": true,
   "Solid": false,
   "Depth": 0,
   "Persistent": true,
@@ -75,6 +75,11 @@
       "Category": "Other",
       "Subtype": "User2",
       "CodeEntry": "ap_manager_update_state_from_location"
+    },
+    {
+      "Category": "Draw",
+      "Subtype": "DrawGUIEnd",
+      "CodeEntry": "ap_manager_draw_connection_status"
     }
   ]
 }

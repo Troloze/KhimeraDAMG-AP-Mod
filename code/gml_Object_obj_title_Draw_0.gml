@@ -68,16 +68,6 @@ if (drawMisc)
     draw_set_halign(fa_left);
     draw_set_valign(fa_bottom);
     scr_shadowText(2, view_hview - 2, "AP RANDOMIZER MOD V." + global.ap_mod_version + "#2026 TROLOZE", 16777215, 0, 2);
-
-    if (global.game_version == 0)
-    {
-        if (!global.STEAM_OPEN)
-            cc = 255;
-        else
-            cc = 16777215;
-        
-        draw_set_halign(fa_left);
-        draw_set_valign(fa_top);
-        scr_shadowText(2, 2, steamMessage[global.STEAM_OPEN, lang], cc, 0, 2);
-    }
+    
+    // Removed steam connection status viewer since it is useless for this mod's purpose, and I want to use that area for connection status viewing.
 }
