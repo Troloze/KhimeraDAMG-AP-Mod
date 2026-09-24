@@ -27,27 +27,33 @@ if (li_read_cooldown > 0) {
     }
 }
 
+// Do NOT read hi if cctx hasn't been consumed.
+if (!global.ap_has_cctx) {
+    if (root_hi != -1) {
+        ds_map_destroy(root_hi);
+        root_hi = -1;
+    }
+}
+
 // Using while for the purpose of escaping in case an inconsistency is found, 
 // this only runs once.
 while (root_cctx != -1) {
 // Handle connection context importing
-    ap_misc_log(false, "Attempting to load cctx...");
+    ap_misc_log("Attempting to load cctx...");
   
     // We do not read it if we're missing any parts of the context.
     var cctx = ds_map_find_value(root_cctx, "message");
     if (is_undefined(cctx)) {
-        ap_misc_log(true, "Failed to load cctx: base message field is undefined.");
+        ap_misc_log_critical("Failed to load cctx: base message field is undefined.");
         break;
     }
     
     // First layer validation
     var meta = ds_map_find_value(cctx, "meta");
-    var options = ds_map_find_value(cctx, "options");
-    var data = ds_map_find_value(cctx, "data");
     var session = ds_map_find_value(cctx, "session");
     
     if (is_undefined(meta)) {
-        ap_misc_log(true, "Failed to load cctx: meta field is undefined.");
+        ap_misc_log_critical("Failed to load cctx: meta field is undefined.");
         break;
     }
     
@@ -57,92 +63,102 @@ while (root_cctx != -1) {
     var meta_client_version = ds_map_find_value(meta, "client_world_version");
     var meta_slot_name = ds_map_find_value(meta, "slot_name");
     var meta_seed = ds_map_find_value(meta, "seed");
+    var meta_options = ds_map_find_value(meta, "options");
+    var meta_generation_info = ds_map_find_value(meta, "generation_info");
     
     if (is_undefined(meta_ap_version)) {
-        ap_misc_log(true, "Failed to load cctx: archipelago_version field from meta is undefined.");
+        ap_misc_log_critical("Failed to load cctx: archipelago_version field from meta is undefined.");
         break;
     }
     if (is_undefined(meta_host_version)) {
-        ap_misc_log(true, "Failed to load cctx: host_world_version field from meta is undefined.");
+        ap_misc_log_critical("Failed to load cctx: host_world_version field from meta is undefined.");
         break;
     }
     if (is_undefined(meta_client_version)) {
-        ap_misc_log(true, "Failed to load cctx: client_world_version field from meta is undefined.");
+        ap_misc_log_critical("Failed to load cctx: client_world_version field from meta is undefined.");
         break;
     }
     if (is_undefined(meta_slot_name)) {
-        ap_misc_log(true, "Failed to load cctx: slot_name field from meta is undefined.");
+        ap_misc_log_critical("Failed to load cctx: slot_name field from meta is undefined.");
         break;
     }
     if (is_undefined(meta_seed)) {
         // Current client version doesn't push seed, once that is updated remove these comments.
-        // ap_misc_log(true, "Failed to load cctx: seed field from meta is undefined.");
+        // ap_misc_log_critical("Failed to load cctx: seed field from meta is undefined.");
         // break; 
     }
     
     // Options validation
-    var options_names;
-    var options_types;
-    var options_values;
-    var options_count;
-    if (!is_undefined(options)) {
-        options_names = ds_map_find_value(options, "names");
-        options_types = ds_map_find_value(options, "types");
-        options_values = ds_map_find_value(options, "values");
-        options_count = ds_map_find_value(options, "count");
+    var meta_options_names;
+    var meta_options_types;
+    var meta_options_values;
+    var meta_options_count;
+    if (!is_undefined(meta_options)) {
+        meta_options_names = ds_map_find_value(meta_options, "names");
+        meta_options_types = ds_map_find_value(meta_options, "types");
+        meta_options_values = ds_map_find_value(meta_options, "values");
+        meta_options_count = ds_map_find_value(meta_options, "count");
         
-        if (is_undefined(options_names)) {
-            ap_misc_log(true, "Failed to load cctx: names field from options is undefined.");
+        if (is_undefined(meta_options_names)) {
+            ap_misc_log_critical("Failed to load cctx: names field from options is undefined.");
             break;
         }
-        if (is_undefined(options_types)) {
-            ap_misc_log(true, "Failed to load cctx: types field from options is undefined.");
+        if (is_undefined(meta_options_types)) {
+            ap_misc_log_critical("Failed to load cctx: types field from options is undefined.");
             break;
         }
-        if (is_undefined(options_values)) {
-            ap_misc_log(true, "Failed to load cctx: values field from options is undefined.");
+        if (is_undefined(meta_options_values)) {
+            ap_misc_log_critical("Failed to load cctx: values field from options is undefined.");
             break;
         }
-        if (is_undefined(options_count)) {
-            ap_misc_log(true, "Failed to load cctx: count field from options is undefined.");
+        if (is_undefined(meta_options_count)) {
+            ap_misc_log_critical("Failed to load cctx: count field from options is undefined.");
             break;
         }
     }
     
-    // Data validation
-    var data_names;
-    var data_types;
-    var data_values;
-    var data_count;
-    if (!is_undefined(data)) {
-        data_names = ds_map_find_value(data, "names");
-        data_types = ds_map_find_value(data, "types");
-        data_values = ds_map_find_value(data, "values");
-        data_count = ds_map_find_value(data, "count");
+    // generation_info validation
+    var meta_gen_names = undefined;
+    var meta_gen_types = undefined;
+    var meta_gen_values = undefined;
+    var meta_gen_count = undefined;
+    if (!is_undefined(meta_generation_info)) {
+        meta_gen_names = ds_map_find_value(meta_generation_info, "names");
+        meta_gen_types = ds_map_find_value(meta_generation_info, "types");
+        meta_gen_values = ds_map_find_value(meta_generation_info, "values");
+        meta_gen_count = ds_map_find_value(meta_generation_info, "count");
     
-        if (is_undefined(data_names)) {
-            ap_misc_log(true, "Failed to load cctx: names field from data is undefined.");
+        if (is_undefined(meta_gen_names)) {
+            ap_misc_log_critical("Failed to load cctx: names field from generation information is undefined.");
             break;
         }
-        if (is_undefined(data_types)) {
-            ap_misc_log(true, "Failed to load cctx: types field from data is undefined.");
+        if (is_undefined(meta_gen_types)) {
+            ap_misc_log_critical("Failed to load cctx: types field from generation information is undefined.");
             break;
         }
-        if (is_undefined(data_values)) {
-            ap_misc_log(true, "Failed to load cctx: values field from data is undefined.");
+        if (is_undefined(meta_gen_values)) {
+            ap_misc_log_critical("Failed to load cctx: values field from generation information is undefined.");
             break;
         }
-        if (is_undefined(data_count)) {
-            ap_misc_log(true, "Failed to load cctx: count field from data is undefined.");
+        if (is_undefined(meta_gen_count)) {
+            ap_misc_log_critical("Failed to load cctx: count field from generation information is undefined.");
             break;
         }
     }
+    
+    
     
     // Session validation
     var session_last_ack;
     var session_item_list;
     var session_location_ids;
     var session_is_win;
+    
+    var game_data = undefined;
+    var game_data_names = undefined;
+    var game_data_types = undefined;
+    var game_data_values = undefined;
+    var game_data_count = undefined;
     
     var sit_item_ids;
     var sit_player_ids;
@@ -152,6 +168,7 @@ while (root_cctx != -1) {
         session_item_list = ds_map_find_value(session, "item_list");
         session_location_ids = ds_map_find_value(session, "location_ids");
         session_is_win = ds_map_find_value(session, "is_win");
+        game_data = ds_map_find_value(session, "game_data");
          
         
         if (!is_undefined(session_item_list)){
@@ -161,19 +178,45 @@ while (root_cctx != -1) {
             sit_count = ds_map_find_value(session_item_list, "count");
             
             if (is_undefined(sit_item_ids)) {
-                ap_misc_log(true, "Failed to load cctx: item_ids field from item_list (session) is undefined.");
+                ap_misc_log_critical("Failed to load cctx: item_ids field from item_list (session) is undefined.");
                 break;
             }
             if (is_undefined(sit_player_ids)) {
-                ap_misc_log(true, "Failed to load cctx: player_ids field from item_list (session) is undefined.");
+                ap_misc_log_critical("Failed to load cctx: player_ids field from item_list (session) is undefined.");
                 break;
             }
             if (is_undefined(sit_count)) {
-                ap_misc_log(true, "Failed to load cctx: count field from item_list (session) is undefined.");
+                ap_misc_log_critical("Failed to load cctx: count field from item_list (session) is undefined.");
+                break;
+            }
+        }
+        if (!is_undefined(game_data)) {
+            game_data_names = ds_map_find_value(game_data, "names");
+            game_data_types = ds_map_find_value(game_data, "types");
+            game_data_values = ds_map_find_value(game_data, "values");
+            game_data_count = ds_map_find_value(game_data, "count");
+        
+            if (is_undefined(game_data_names)) {
+                ap_misc_log_critical("Failed to load cctx: names field from game data is undefined.");
+                break;
+            }
+            if (is_undefined(game_data_types)) {
+                ap_misc_log_critical("Failed to load cctx: types field from game data is undefined.");
+                break;
+            }
+            if (is_undefined(game_data_values)) {
+                ap_misc_log_critical("Failed to load cctx: values field from game data is undefined.");
+                break;
+            }
+            if (is_undefined(game_data_count)) {
+                ap_misc_log_critical("Failed to load cctx: count field from game data is undefined.");
                 break;
             }
         }
     }
+    
+    // Game data validation
+    
     
     // If we reached here, we are validated!
     
@@ -192,22 +235,26 @@ while (root_cctx != -1) {
     
     var option_data;
     // Options:
-    if (!is_undefined(options)) {
-        if (!is_undefined(global.ap_options)) ap_communication_destroy_option_data(global.ap_options);
-        option_data = ap_communication_create_option_data(options_names, options_types, options_values, options_count);
+    if (!is_undefined(meta_options) && is_undefined(global.ap_options)) {
+        option_data = ap_communication_create_option_data(meta_options_names, meta_options_types, meta_options_values, meta_options_count);
         if (option_data != -1) global.ap_options = option_data;
     }
-    // Data:
-    if (!is_undefined(data)) {
-        if (!is_undefined(global.ap_data)) ap_communication_destroy_option_data(global.ap_data);
-        option_data = ap_communication_create_option_data(data_names, data_types, data_values, data_count);
-        if (option_data != -1) global.ap_data = option_data;
+    
+    var gen_info;
+    // Slot data:
+    if (!is_undefined(meta_generation_info) && is_undefined(global.ap_gen_info)) {
+        gen_info = ap_communication_create_option_data(meta_gen_names, meta_gen_types, meta_gen_values, meta_gen_count);
+        if (gen_info != -1) global.ap_gen_info = gen_info;
     }
+    
+    // Data: (always loads, even if not passed)
+    ap_communication_load_data(game_data_names, game_data_types, game_data_values, game_data_count);
     
     // Session:
     if (!is_undefined(session)) {
         if (!is_undefined(session_last_ack)) {
             global.ap_last_ack = real(session_last_ack);
+            ap_misc_log("Last ack: " + string(session_last_ack));
         }
         if (!is_undefined(session_is_win)) {
             global.ap_is_win = real(session_is_win);
@@ -219,6 +266,7 @@ while (root_cctx != -1) {
                 var sli_task = ds_map_create();
                 ds_map_replace(sli_task, "type", "location");
                 ds_map_replace(sli_task, "id", ds_list_find_value(session_location_ids, sli_i));
+                ds_map_replace(sli_task, "from_cctx", 1);
                 ds_queue_enqueue(global.ap_incomming_tasks, sli_task);
             }
         }
@@ -237,9 +285,14 @@ while (root_cctx != -1) {
         }
     }
 
-    ap_misc_log(false, "Successfully loaded cctx.");
+    ap_misc_log("Successfully loaded cctx.");
     cctx_read_cooldown = 10; // Wait 10 ticks before reading another cctx.
     global.ap_has_cctx = 1;
+    
+    // Create task to load the game state after all other tasks have been consumed.
+    var state_task = ds_map_create();
+    ds_map_replace(state_task, "type", "load_state");
+    ds_queue_enqueue(global.ap_incomming_tasks, state_task);
 
     // Close the loop
     break;
@@ -251,12 +304,12 @@ if (root_cctx != -1) ds_map_destroy(root_cctx);
 // this only runs once.
 while (root_li != -1) {
 // Handle location information importing
-    ap_misc_log(false, "Attempting to load li...");
+    ap_misc_log("Attempting to load li...");
     
     var li = ds_map_find_value(root_li, "message");
     
     if (is_undefined(li)) {
-        ap_misc_log(true, "Failed to load li: base message field is undefined.");
+        ap_misc_log_critical("Failed to load li: base message field is undefined.");
         break;
     }
     
@@ -264,7 +317,7 @@ while (root_li != -1) {
     var locations = ds_map_find_value(li, "locations");
     
     if (is_undefined(enabled)) {
-        ap_misc_log(true, "Failed to load li: enabled field is undefined.");
+        ap_misc_log_critical("Failed to load li: enabled field is undefined.");
         break;
     }
      
@@ -273,13 +326,13 @@ while (root_li != -1) {
         global.ap_li_enabled = 0;
         global.ap_location_information = undefined;
         global.ap_has_li = 1;
-        ap_misc_log(false, "Successfully loaded li.");
+        ap_misc_log("Successfully loaded li.");
         break;
     }
     
     // Locations validation
     if (is_undefined(locations)) {
-        ap_misc_log(true, "Failed to load li: enabled is set to true, but locations is undefined.");
+        ap_misc_log_critical("Failed to load li: enabled is set to true, but locations is undefined.");
         break;
     }
     
@@ -289,19 +342,19 @@ while (root_li != -1) {
     var loc_count = ds_map_find_value(locations, "count");
     
     if (is_undefined(loc_location_ids)) {
-        ap_misc_log(true, "Failed to load li: enabled is set to true, but location_ids from locations is undefined.");
+        ap_misc_log_critical("Failed to load li: enabled is set to true, but location_ids from locations is undefined.");
         break;
     }
     if (is_undefined(loc_location_classifications)) {
-        ap_misc_log(true, "Failed to load li: enabled is set to true, but location_classifications from locations is undefined.");
+        ap_misc_log_critical("Failed to load li: enabled is set to true, but location_classifications from locations is undefined.");
         break;
     }
     if (is_undefined(loc_player_ids)) {
-        ap_misc_log(true, "Failed to load li: enabled is set to true, but player_ids from locations is undefined.");
+        ap_misc_log_critical("Failed to load li: enabled is set to true, but player_ids from locations is undefined.");
         break;
     }
     if (is_undefined(loc_count)) {
-        ap_misc_log(true, "Failed to load li: enabled is set to true, but count from locations is undefined.");
+        ap_misc_log_critical("Failed to load li: enabled is set to true, but count from locations is undefined.");
         break;
     }
         
@@ -312,7 +365,7 @@ while (root_li != -1) {
     global.ap_li_enabled = 1;
     global.ap_has_li = 1;
     
-    ap_misc_log(false, "Successfully loaded li.");
+    ap_misc_log("Successfully loaded li.");
     li_read_cooldown = 10; // Wait 10 ticks before reading another li.
     // Close the loop
     break;
@@ -325,12 +378,12 @@ if (root_li != -1) ds_map_destroy(root_li);
 while (root_hi != -1) {
 // Handle host information importing
     // No reason to log this one, it will happen constantly.
-    // ap_misc_log(false, "Attempting to load hi...");
+    // ap_misc_log("Attempting to load hi...");
     
     var hi = ds_map_find_value(root_hi, "message");
     
     if (is_undefined(hi)) {
-        ap_misc_log(true, "Failed to load hi: base message field is undefined.");
+        ap_misc_log_critical("Failed to load hi: base message field is undefined.");
         break;
     }
     
@@ -340,6 +393,7 @@ while (root_hi != -1) {
     var item_list = ds_map_find_value(hi, "item_list");
     var location_ids = ds_map_find_value(hi, "location_ids");
     var death_ack = ds_map_find_value(hi, "death_ack");
+    var data_ack = ds_map_find_value(hi, "data_ack");
     
     var msg_senders;
     var msg_messages;
@@ -350,15 +404,15 @@ while (root_hi != -1) {
         msg_count = ds_map_find_value(messages, "count");
         
         if (is_undefined(msg_senders)) {
-            ap_misc_log(true, "Failed to load hi: senders field from messages is undefined.");
+            ap_misc_log_critical("Failed to load hi: senders field from messages is undefined.");
             break;
         }
         if (is_undefined(msg_messages)) {
-            ap_misc_log(true, "Failed to load hi: messages field from messages is undefined.");
+            ap_misc_log_critical("Failed to load hi: messages field from messages is undefined.");
             break;
         }
         if (is_undefined(msg_count)) {
-            ap_misc_log(true, "Failed to load hi: count field from messages is undefined.");
+            ap_misc_log_critical("Failed to load hi: count field from messages is undefined.");
             break;
         }
     }
@@ -372,15 +426,15 @@ while (root_hi != -1) {
         dl_message = ds_map_find_value(death_link, "message");
         
         if (is_undefined(dl_sender)) {
-            ap_misc_log(true, "Failed to load hi: sender field from death_link is undefined.");
+            ap_misc_log_critical("Failed to load hi: sender field from death_link is undefined.");
             break;
         }
         if (is_undefined(dl_id)) {
-            ap_misc_log(true, "Failed to load hi: id field from death_link is undefined.");
+            ap_misc_log_critical("Failed to load hi: id field from death_link is undefined.");
             break;
         }
         if (is_undefined(dl_message)) {
-            ap_misc_log(true, "Failed to load hi: message field from death_link is undefined.");
+            ap_misc_log_critical("Failed to load hi: message field from death_link is undefined.");
             break;
         }
     }
@@ -396,23 +450,23 @@ while (root_hi != -1) {
         il_count = ds_map_find_value(item_list, "count");
     
         if (is_undefined(il_item_ids)) {
-            ap_misc_log(true, "Failed to load hi: item_ids field from item_list is undefined.");
+            ap_misc_log_critical("Failed to load hi: item_ids field from item_list is undefined.");
             break;
         }
         if (is_undefined(il_player_ids)) {
-            ap_misc_log(true, "Failed to load hi: player_ids field from item_list is undefined.");
+            ap_misc_log_critical("Failed to load hi: player_ids field from item_list is undefined.");
             break;
         }
         if (is_undefined(il_item_indexes)) {
-            ap_misc_log(true, "Failed to load hi: item_indexes field from item_list is undefined.");
+            ap_misc_log_critical("Failed to load hi: item_indexes field from item_list is undefined.");
             break;
         }
         if (is_undefined(il_count)) {
-            ap_misc_log(true, "Failed to load hi: count field from item_list is undefined.");
+            ap_misc_log_critical("Failed to load hi: count field from item_list is undefined.");
             break;
         }
     }
-    
+  
     // If we reached here, we are validated!
     
     if (!is_undefined(messages)) {
@@ -440,7 +494,7 @@ while (root_hi != -1) {
             ds_map_replace(il_task, "type", "item");
             ds_map_replace(il_task, "sender", ds_list_find_value(il_player_ids, il_i));
             ds_map_replace(il_task, "index", ds_list_find_value(il_item_indexes, il_i));
-            ds_map_replace(il_task, "id", ds_list_find_value(il_player_ids, il_i));
+            ds_map_replace(il_task, "id", ds_list_find_value(il_item_ids, il_i));
             // Note that items are always placed in order.
             ds_queue_enqueue(global.ap_incomming_tasks, il_task);
         }
@@ -456,12 +510,21 @@ while (root_hi != -1) {
         }
     }
     if (!is_undefined(death_ack)) {
-        var dack_task = ds_map_create();
-        ds_map_replace(dack_task, "type", "death_ack");
-        ds_map_replace(dack_task, "id", real(death_ack));
-        ds_queue_enqueue(global.ap_incomming_tasks, dack_task);
+        var death_ack_task = ds_map_create();
+        ds_map_replace(death_ack_task, "type", "death_ack");
+        ds_map_replace(death_ack_task, "id", real(death_ack));
+        ds_queue_enqueue(global.ap_incomming_tasks, death_ack_task);
     }
-    
+    if (!is_undefined(data_ack)) {
+        var data_ack_size = ds_list_size(data_ack);
+        var data_ack_i;
+        for (data_ack_i = 0; data_ack_i < data_ack_size; data_ack_i++) {
+            var data_ack_task = ds_map_create();
+            ds_map_replace(data_ack_task, "type", "data_ack");
+            ds_map_replace(data_ack_task, "id", ds_list_find_value(data_ack, data_ack_i));
+            ds_queue_enqueue(global.ap_incomming_tasks, data_ack_task);
+        }
+    }
     // No reason to log success on this one, as it is repeated on loop.
 
     // Close the loop
@@ -497,4 +560,4 @@ if (global.ap_client_connected) {
 
 
 // Maintains the observer loop
-alarm[1] = observer_tick;
+alarm[0] = observer_tick;

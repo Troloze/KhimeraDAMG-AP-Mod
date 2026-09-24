@@ -39,7 +39,7 @@ init_triggers();
 init_achievements();
 init_enemyLog();
 init_costumes();
-scr_loadHarvestLore();
+// scr_loadHarvestLore();
 show_score = 0;
 show_lives = 0;
 show_health = 0;
@@ -115,13 +115,30 @@ global.ap_slot_name = undefined;
 global.ap_seed = undefined;
 
 global.ap_options = undefined;
-global.ap_data = undefined;
+global.ap_options_default = undefined;
+
+global.ap_gen_info = undefined;
+global.ap_gen_info_default = undefined;
 
 global.ap_has_li = 0;
 global.ap_li_enabled = 0;
 global.ap_location_information = undefined;
 
-global.ap_is_win = 0;
+global.ap_is_win = 0; // Not really a constant, since the game will set this on victory, but it shall stay here regardless.
+
+// Game Data.
+global.ap_data = ds_map_create(); 
+
+global.ap_data_changes_counter = 0;
+global.ap_data_changes_a = ds_map_create();
+global.ap_data_changes_b = ds_map_create();
+
+// Helper structures
+global.ap_book_loc_to_id = undefined;
+global.ap_book_id_to_loc = undefined;
+
+global.ap_weapon_loc_to_id = undefined;
+global.ap_weapon_id_to_loc = undefined;
 
 // Variables
 global.ap_client_connected = 0;
@@ -138,20 +155,23 @@ global.ap_last_death_link_ack = 0;
 
 global.ap_last_ack = 0;
 
+global.ap_data_disable_update_signals = 0;
+
+global.state_initialized = 0;
+
 // Pipeline structures
 global.ap_incomming_tasks = ds_queue_create();
 global.ap_outgoing_tasks = ds_queue_create();
 
 // Inner State structures
-global.ap_received_items = ds_list_create();
-global.ap_acked_items = ds_map_create();
-global.ap_acked_locations = ds_map_create();
+global.ap_item_map = ds_map_create();           
+global.ap_local_locations = ds_map_create();    // This is for communication handling only.
+global.ap_acked_locations = ds_map_create();    // Game elements should check for this to see if a location was checked or not.
 
 // Cleanup leftover files
 ap_misc_cleanup();
 
 // Create communication handler
-ap_misc_log(false, "Starting the communication handler.")
-instance_create(0, 0, obj_ap_communication_handler);
-
+ap_misc_log("Starting the communication handler.");
+instance_create(0, 0, ap_manager);
 

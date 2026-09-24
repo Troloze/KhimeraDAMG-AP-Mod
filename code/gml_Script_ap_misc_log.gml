@@ -1,5 +1,4 @@
-var is_critical = argument0;
-var message = argument1;
+var message = argument0;
 
 if (! directory_exists("logs")) {
     directory_create("logs");
@@ -15,9 +14,7 @@ if (! file_exists(log_file)) {
     file_text_close(_file);
 }
 
-var warn = ""
-if (is_critical) warn = " [CRITICAL] "
-var log = "[" + ap_misc_generate_time_stamp(true) + "]: " + warn + message
+var log = "[" + ap_misc_generate_time_stamp(true) + "]: "+ message
 
 var file = file_text_open_append(log_file);
 file_text_write_string(file, log);
