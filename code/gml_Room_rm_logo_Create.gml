@@ -157,7 +157,7 @@ global.ap_last_ack = 0;
 
 global.ap_data_disable_update_signals = 0;
 
-global.state_initialized = 0;
+global.ap_state_initialized = 0;
 
 // Pipeline structures
 global.ap_incomming_tasks = ds_queue_create();

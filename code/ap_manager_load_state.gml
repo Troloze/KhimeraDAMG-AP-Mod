@@ -320,5 +320,5 @@ for (i = 1; i <= 10; i++) {
 if (!is_undefined(active_weapons)) ds_list_destroy(active_weapons);
 
 global.ap_data_disable_update_signals = 0; // Re-enable data updates to client.
-global.state_initialized = 1;
+global.ap_state_initialized = 1;
 ap_misc_log("Successfully restored state data.");
