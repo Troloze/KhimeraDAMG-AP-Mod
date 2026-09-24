@@ -11,7 +11,7 @@ global.stat_food = 0;                   // *
 global.stat_death = 0;                  // *
 */
 
-if (!global.state_initialized) return;
+if (!global.ap_state_initialized) return;
 
 var i, j;
 // Stage information 

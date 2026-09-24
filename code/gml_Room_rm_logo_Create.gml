@@ -17,10 +17,10 @@ global.timerOn = scr_IO(real(ini_read_string("settings", "timerOn", "0")));
 global.hideCursor = scr_IO(real(ini_read_string("settings", "hideCursor", "0")));
 global.fontType = scr_IO(real(ini_read_string("settings", "fontType", "0")));
 global.showPercent = scr_IO(real(ini_read_string("settings", "showPercent", "0")));
-global.berserkUnlocked = scr_IO(real(ini_read_string("settings", "bUnlocked", "0")));
-global.halloweenUnlocked = scr_IO(real(ini_read_string("settings", "hUnlocked", "0")));
-global.halloweenComplete = scr_IO(real(ini_read_string("settings", "hComplete", "0")));
-global.raceCostume = scr_range(real(ini_read_string("settings", "raceCostume", "1")), 1, 6);
+global.berserkUnlocked = 0;
+global.halloweenUnlocked = 1; // Not accessible, but enabled to avoid showing the unlock text to the user.
+global.halloweenComplete = 0;
+global.raceCostume = 0;
 ini_close();
 
 if (global.hideCursor)
@@ -157,7 +157,7 @@ global.ap_last_ack = 0;
 
 global.ap_data_disable_update_signals = 0;
 
-global.state_initialized = 0;
+global.ap_state_initialized = 0;
 
 // Pipeline structures
 global.ap_incomming_tasks = ds_queue_create();

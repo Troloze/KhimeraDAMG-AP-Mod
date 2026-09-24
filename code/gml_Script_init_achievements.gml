@@ -1,5 +1,6 @@
 global.total_achievements = 28;
 
+// We will disable achievement viewing in the mod.
 /* ini_open("chimera.dat");
 
 for (i = 1; i <= global.total_achievements; i += 1)
