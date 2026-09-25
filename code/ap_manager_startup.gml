@@ -1,8 +1,8 @@
 // Communication loops
 writer_tick = 6;
 observer_tick = 5;
-max_incomming_tasks_per_step = 50;
-max_outgoing_tasks_per_tick = 100;
+max_incomming_tasks_per_step = 10; // To avoid stutters on large batches (like releases).
+max_outgoing_tasks_per_tick = 10;
 
 cctx_read_cooldown = 0;
 li_read_cooldown = 0;
@@ -11,6 +11,9 @@ alarm[0] = 1; // Read first
 alarm[1] = 2; // Then write
 
 local_last_ack = 0;
+
+// Inspection
+inspector_round_robin = 0;
 
 // Archipelago GUI
 // Connection Status

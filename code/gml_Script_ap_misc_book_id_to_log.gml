@@ -1,8 +1,6 @@
 var book_id = argument0
 
 if (is_undefined(global.ap_book_id_to_loc)) {
-    // Start at last index for faster alocation
-    global.ap_book_id_to_loc[38] = 180300003;        // Cakeboy 1 (Cakeboy) [Technically Chelshia's House 2]
     global.ap_book_id_to_loc[1] = 300003;            // Ragazza plains 3 (Chelshia)
     global.ap_book_id_to_loc[2] = 10300002;          // Sky Fortress 2 (The Professor)
     global.ap_book_id_to_loc[3] = 30300004;          // Pumpkin Valley 4 (Bernadette)
@@ -40,6 +38,7 @@ if (is_undefined(global.ap_book_id_to_loc)) {
     global.ap_book_id_to_loc[35] = 90300002;         // Ragazza Town 2 (Nyazione)
     global.ap_book_id_to_loc[36] = 140300001;        // Chelshia's House 1 (Muffey)
     global.ap_book_id_to_loc[37] = 50300002;         // Tower of Power 2 (Estylia)
+    global.ap_book_id_to_loc[38] = 180300001;        // Cakeboy 1 (Cakeboy) [Technically Chelshia's House 2]
 }
 
 if (book_id < 0 || book_id > 38) return undefined;

@@ -257,7 +257,7 @@ while (root_cctx != -1) {
             ap_misc_log("Last ack: " + string(session_last_ack));
         }
         if (!is_undefined(session_is_win)) {
-            global.ap_is_win = real(session_is_win);
+            if (!global.ap_is_win) global.ap_is_win = real(session_is_win);
         }
         if (!is_undefined(session_location_ids)) {
             var sli_size = ds_list_size(session_location_ids);
