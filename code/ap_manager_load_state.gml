@@ -22,7 +22,7 @@ global.stat_treasure = 0;               // *
 global.stat_enemies = 0;                // *
 global.stat_levels = 0;                 // *
 global.stat_food = 0;                   // *
-global.stat_deaths = 0;                  // *
+global.stat_deaths = 0;                 // *
 
 // Initializing game state diff globals. (used for inspection)
 global._level_complete[17] = 0;          // *
@@ -46,7 +46,19 @@ global._stat_treasure = 0;               // *
 global._stat_enemies = 0;                // *
 global._stat_levels = 0;                 // *
 global._stat_food = 0;                   // *
-global._stat_deaths = 0;                  // *
+global._stat_deaths = 0;                 // *
+
+// Others
+global.maxHP = 8;                        // * Four hearts.
+
+// Item state tracking
+
+
+global.ap_item_total_fairies = 0;        // * Used for tracking when a pause update should occur.
+global.ap_item_nme_obtained[38] = 0;     // * Only used when shuffle_books is on.
+global.ap_item_level_rockPile[17] = 0;   // * Only used when shuffle_detonators is on.
+global.ap_item_level_food[17] = 0;       // * Only used when shuffle_gourmet_gal is on.
+global.ap_item_wep_obtained[10] = 0;     // * Always used.
 
 global.ap_data_disable_update_signals = 1; // Disable data update signals to client, used to construct the default data state.
 
@@ -158,6 +170,8 @@ for (i = 0; i <= 17; i++) {
 }
 if (!is_undefined(fairy_map)) ds_map_destroy(fairy_map);
 
+global.ap_item_total_fairies = ap_item_get(500200001);
+
 // Books 
 var book_map = ap_data_get("books");
 if (!ap_option_get("shuffle_books") && is_undefined(book_map)) {
@@ -170,11 +184,17 @@ for (i = 1; i <= 38; i++) {
     var has_book;
     if (ap_option_get("shuffle_books")) has_book = ap_location_get(book_location);
     else has_book = ds_map_exists(book_map, book_location);
-    
+    // Location
     global.nme_obtained[i] = has_book;
     global._nme_obtained[i] = has_book;
     // global.nme_new[i] = 0;  // Always 0 for the purposes of the mod, we don't need to store or restore this information.
     // global._nme_new[i] = 0;
+    
+    // Item 
+    var book_item = ap_misc_book_id_to_item(i);
+    if (ap_option_get("shuffle_books")) has_book = ap_item_get(book_item);
+    // else has_book = ds_map_exists // Value already set.
+    global.ap_item_nme_obtained[i] = has_book; 
 }
 
 if (!is_undefined(book_map)) ds_map_destroy(book_map);
@@ -194,9 +214,15 @@ for (i = 1; i <= 4; i++) {
     if (ap_option_get("shuffle_detonators")) has_detonator = ap_location_get(detonator_location);
     else if (!is_undefined(detonator_map)) has_detonator = ds_map_exists(detonator_map, detonator_location);
     else has_detonator = 0;
-    
+    // Location
     global.level_rockPile[i] = has_detonator;
     global._level_rockPile[i] = has_detonator;
+    
+    // Item
+    var detonator_item = 500500000 + i;
+    if (ap_option_get("shuffle_detonators")) has_detonator = ap_item_get(detonator_item);
+    // else has_detonator = ds_map_exists // Value already set.
+    global.ap_item_level_rockPile[i] = has_detonator;
 }
 
 if (!is_undefined(detonator_map)) ds_map_destroy(detonator_map);
@@ -216,9 +242,21 @@ for (i = 1; i <= 4; i++) {
     if (ap_option_get("shuffle_gourmet_gal")) has_ggal = ap_location_get(ggal_location);
     else if (!is_undefined(ggal_map)) has_ggal = ds_map_exists(ggal_map, ggal_location);
     else has_ggal = 0;
-    
+    // location
     global.level_food[i] = has_ggal;
     global._level_food[i] = has_ggal;
+    
+    // Item
+    var food_item = 500600000 + i;
+    if (ap_option_get("shuffle_gourmet_gal")) has_ggal = ap_item_get(food_item);
+    // else has_ggal = ds_map_exists // Value already set.
+    global.ap_item_level_food[i] = has_ggal;
+    
+    // If has food item increase maxHP by 2;
+    if (has_ggal) {
+        global.maxHP += 2;
+        global.HP += 2;
+    }
 }
 
 if (!is_undefined(ggal_map)) ds_map_destroy(ggal_map);
@@ -285,17 +323,22 @@ if (!is_undefined(stat_list)) {
 if (!is_undefined(stat_list)) ds_list_destroy(stat_list);
 
 // Weapons
-global.wep_obtained[1] = 1 // Golem fist, always available.
-global._wep_obtained[1] = 1 
+global.wep_obtained[1] = 1; // Golem fist, always available.
+global._wep_obtained[1] = 1; 
+global.ap_item_wep_obtained[1] = 1;
 for (i = 1; i <= 8; i++) { // All stage upgrades.
     var weapon_location =   
         i * 10000000 +  // Stage
         100002;         // Upgrade
     // No undefined checks, if this explodes it means I messed up and I need to know.
     var weapon_id = ap_misc_weapon_loc_to_id(weapon_location);    
-    
+    // location
     global.wep_obtained[weapon_id] = ap_location_get(weapon_location);
     global._wep_obtained[weapon_id] = ap_location_get(weapon_location);
+    
+    // Item
+    var weapon_item = 500000000 + i;
+    global.ap_item_wep_obtained[weapon_id] = ap_item_get(weapon_item);
 }
 
 var lucky_doll = ap_data_get("lucky_doll");
@@ -303,9 +346,11 @@ if (is_undefined(lucky_doll)) {
     ap_data_update("lucky_doll", 0);
     global.wep_obtained[10] = 0;
     global._wep_obtained[10] = 0;
+    global.ap_item_wep_obtained[10] = 0;
 } else {
     global.wep_obtained[10] = lucky_doll;
     global._wep_obtained[10] = lucky_doll;
+    global.ap_item_wep_obtained[10] = lucky_doll;
 }
 
 // Active Weapons

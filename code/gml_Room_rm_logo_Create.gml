@@ -139,6 +139,7 @@ global.ap_book_id_to_loc = undefined;
 
 global.ap_weapon_loc_to_id = undefined;
 global.ap_weapon_id_to_loc = undefined;
+global.ap_weapon_id_to_item = undefined;
 
 // Variables
 global.ap_client_connected = 0;
