@@ -105,7 +105,7 @@ global.race_hours = 0;
 // ##### Archipelago Randomizer Globals #####
 // Constants
 global.ap_startup_time_stamp = ap_misc_generate_time_stamp(true);
-global.ap_mod_version = "v0.0.3";
+global.ap_mod_version = "v0.0.9";
 global.ap_max_heartbeat_delta = 2.0;
 
 // Connection constants

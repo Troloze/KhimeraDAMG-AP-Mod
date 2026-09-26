@@ -6,8 +6,8 @@ steamMessage[1, 0] = "CONNECTED TO STEAM";
 startPrompt[0] = "PRESS [" + scr_keyname(global.A) + "] TO START";
 lMesStart[0] = "START GAME";
 lMesStartTool[0] = "START PLAYING THE GAME!";
-lMesDisco[0] = "DISCONNECTED";
-lMesDiscoTool[0] = "CONNECT TO ARCHIPELAGO IN ORDER TO START";
+lMesDisco[0] = "START GAME";
+lMesDiscoTool[0] = "CONNECT TO ARCHIPELAGO IN ORDER TO START.";
 lMesOptions[0] = "OPTIONS";
 lMesOptionsTool[0] = "CONFIGURE YOUR KHIMERA EXPERIENCE!";
 lMesExtra[0] = "EXTRAS";
@@ -80,6 +80,7 @@ choiceDisplace = 64;
 Scommand = -1;
 cursorHeight = 0;
 cursorColor = make_color_rgb(202, 141, 30);
+disabledCursorColor = make_color_rgb(162, 168, 172);
 toolTipStr = "";
 toolTipLen = 0;
 toolTipCurrent = 0;
@@ -117,5 +118,14 @@ else if (global.game_version == 1)
 {
     global.DLCnurse = 1;
 }
+
+archipelago_spin = 360;
+
+archipelago_color[0] = make_color_rgb(201, 118, 130)
+archipelago_color[1] = make_color_rgb(117, 194, 117)
+archipelago_color[2] = make_color_rgb(202, 148, 194)
+archipelago_color[3] = make_color_rgb(217, 160, 125)
+archipelago_color[4] = make_color_rgb(118, 126, 189)
+archipelago_color[5] = make_color_rgb(238, 227, 145)
 
 event_perform(ev_other, ev_user0);
