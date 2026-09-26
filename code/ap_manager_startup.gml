@@ -12,6 +12,11 @@ alarm[1] = 2; // Then write
 
 local_last_ack = 0;
 
+// Death link shenanigans
+map_death_link_action = 0;
+map_death_link_chelshia_x = 0;
+map_death_link_chelshia_y = 0;
+
 // Inspection
 inspector_round_robin = 0;
 

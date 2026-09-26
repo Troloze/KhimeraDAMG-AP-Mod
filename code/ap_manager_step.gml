@@ -84,6 +84,14 @@ for (i = 0; i < max_incomming_tasks_per_step; i++) {
             if (is_undefined(dl_id)) break;
             if (is_undefined(message)) break;
             
+            // No "if (ap_option_get("death_link"))" guard here since the client won't send death links if disabled.
+            if (room == rm_map) {
+                alarm[11] = 2;  
+            } else {
+                with (obj_chelshia) {
+                    event_perform(ev_other, ev_user10);
+                }
+            }
             
             out_task = ds_map_create();
             ds_map_replace(out_task, "type", "death_ack");

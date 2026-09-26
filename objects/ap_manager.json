@@ -37,6 +37,11 @@
       "CodeEntry": "ap_manager_communication_writer"
     },
     {
+      "Category": "Alarm",
+      "Subtype": "11",
+      "CodeEntry": "gml_Object_ap_manager_Alarm_11"
+    },
+    {
       "Category": "Step",
       "Subtype": "BeginStep",
       "CodeEntry": "ap_manager_begin_step"
