@@ -119,7 +119,7 @@ else if (global.game_version == 1)
     global.DLCnurse = 1;
 }
 
-archipelago_spin = 360;
+archipelago_spin = 300;
 
 archipelago_color[0] = make_color_rgb(201, 118, 130)
 archipelago_color[1] = make_color_rgb(117, 194, 117)
