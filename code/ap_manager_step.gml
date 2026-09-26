@@ -84,6 +84,7 @@ for (i = 0; i < max_incomming_tasks_per_step; i++) {
             if (is_undefined(dl_id)) break;
             if (is_undefined(message)) break;
             
+            // No "if (ap_option_get("death_link"))" guard here since the client won't send death links if disabled.
             if (room == rm_map) {
                 alarm[11] = 2;  
             } else {
