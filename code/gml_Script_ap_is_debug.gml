@@ -1,0 +1,1 @@
+return 0; // Keep ap_is_debug() .gitignored to avoid commits made in debug mode accidentally.
