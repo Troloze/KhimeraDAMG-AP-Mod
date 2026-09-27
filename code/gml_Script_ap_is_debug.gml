@@ -1,1 +1,2 @@
-return 0; // Keep ap_is_debug() .gitignored to avoid commits made in debug mode accidentally.
+// Be mindful not to commit changes to this file, this should always be commited with return 0.
+return 0;
