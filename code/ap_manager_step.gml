@@ -1,5 +1,6 @@
 var task, t_type, loc_id, sender, item_index, item_id, dl_id, message, dack_id, i, out_task, data_id;
 
+ap_misc_debug_filler_append_routine();
 
 // Incoming Tasks.
 for (i = 0; i < max_incomming_tasks_per_step; i++) {
@@ -46,17 +47,16 @@ for (i = 0; i < max_incomming_tasks_per_step; i++) {
                 if (item_index <= local_last_ack) {
                     ap_misc_log("Skipped duplicated item: " + string(item_id) + "(" + string(item_index) + ")");
                 } else {
-                    if (!ap_communication_is_item_filler(item_id)) {
+                    var ignore_item = 0;
+                    if (!ap_item_is_filler(item_id)) {
                         // Consume any non-filler items here, used mainly when loading cctx.
                         ap_misc_log("Received acked item: " + string(item_id) + "(" + string(item_index) + "/" + string(global.ap_last_ack) + ")")
-                    } else ap_misc_log("Skipped acked filler item: " + string(item_id) + "(" + string(item_index) + "/" + string(global.ap_last_ack) +")")
-                    // Regardless if it is or isn't filler, we add to the item structures.
-                    var current_item_count = ds_map_find_value(global.ap_item_map, item_id)
-                    if (is_undefined(current_item_count)) {
-                        ds_map_replace(global.ap_item_map, item_id, 1);
                     } else {
-                        ds_map_replace(global.ap_item_map, item_id, current_item_count + 1);
+                        ap_misc_log("Skipped acked filler item: " + string(item_id) + "(" + string(item_index) + "/" + string(global.ap_last_ack) +")")
+                        ignore_item = 1;
                     }
+                    // Regardless if it is or isn't filler, we add to the item structures.
+                    ap_item_add(item_id, ignore_item);
                     local_last_ack = item_index;
                 }
             } 
@@ -64,12 +64,7 @@ for (i = 0; i < max_incomming_tasks_per_step; i++) {
                 // Consumes items in order. Will not consume items of higher indexes unless all lower items have been consumed.
                 ap_misc_log("Received item: " + string(item_id) + "(" + string(item_index) + ")")
                 // Adding item to the map.
-                var current_item_count = ds_map_find_value(global.ap_item_map, item_id)
-                if (is_undefined(current_item_count)) {
-                    ds_map_replace(global.ap_item_map, item_id, 1);
-                } else {
-                    ds_map_replace(global.ap_item_map, item_id, current_item_count + 1);
-                }
+                ap_item_add(item_id, 0);
                 global.ap_last_ack = item_index;
                 local_last_ack = item_index;
             }

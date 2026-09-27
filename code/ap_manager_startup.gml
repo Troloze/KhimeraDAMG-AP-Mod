@@ -25,6 +25,18 @@ map_death_link_chelshia_y = 0;
 // Inspection
 inspector_round_robin = 0;
 
+// Filler items.
+dispenser_attempt_cooldown = 10;
+dispenser_instance_cooldown_max_cycles = 12; // 10 * 12 = 120 (2 seconds)
+instance_cooldown_tracker = 0;
+
+filler_queue = ds_queue_create() // Non enemy-instantiating filler
+filler_instance_queue = ds_queue_create() // Enemy-instantiating filler
+
+trap_entities = ds_map_create();        // Used to track which traps should require more waiting.
+
+alarm[2] = dispenser_attempt_cooldown;
+
 // Archipelago GUI
 // Connection Status
 connection_status_background_color = make_color_rgb(0, 0, 0);
@@ -40,3 +52,8 @@ connection_status_text[1] = "DISCONNECTED FROM HOST";
 connection_status_text[2] = "DISCONNECTED FROM CLIENT";
 connection_status_hide_counter = 0;
 connection_status_counter_refill = 90;
+
+
+// Miscelaneous
+chelshia_center_displacement_x = 0;
+chelshia_center_displacement_y = 16;

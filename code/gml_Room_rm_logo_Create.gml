@@ -104,11 +104,12 @@ global.race_hours = 0;
 
 // ##### Archipelago Randomizer Globals #####
 // Constants
-global.AP_DEBUG = ap_is_debug();
 global.ap_startup_time_stamp = ap_misc_generate_time_stamp(true);
 global.ap_mod_version = "v0.0.9";
+global.AP_DEBUG = ap_is_debug();
+if (global.AP_DEBUG) ap_misc_log("DEBUG MODE ACTIVATED");
 global.ap_max_heartbeat_delta = 2.0;
-ap_misc_log("DEBUG MODE ACTIVATED");
+
 // Connection constants
 global.ap_has_cctx = 0;
 global.ap_version = undefined;
