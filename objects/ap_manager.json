@@ -39,7 +39,12 @@
     {
       "Category": "Alarm",
       "Subtype": "11",
-      "CodeEntry": "gml_Object_ap_manager_Alarm_11"
+      "CodeEntry": "ap_manager_map_death_link_sequence"
+    },
+    {
+      "Category": "Alarm",
+      "Subtype": "2",
+      "CodeEntry": "ap_manager_filler_dispenser"
     },
     {
       "Category": "Step",

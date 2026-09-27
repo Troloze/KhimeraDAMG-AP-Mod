@@ -170,6 +170,9 @@ global.ap_item_map = ds_map_create();
 global.ap_local_locations = ds_map_create();    // This is for communication handling only.
 global.ap_acked_locations = ds_map_create();    // Game elements should check for this to see if a location was checked or not.
 
+global.ap_enemy_id = 0;
+global.ap_enemy_tracker = ds_map_create();
+
 // Cleanup leftover files
 ap_misc_cleanup();
 

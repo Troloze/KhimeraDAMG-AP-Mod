@@ -1,5 +1,9 @@
 var cc, text = "";
-if (global.ap_fully_connected) {
+if (global.AP_DEBUG) {
+    cc = connection_status_text_color[0];
+    text = "DEBUG MODE";
+    connection_status_hide_counter = connection_status_counter_refill;
+} else if (global.ap_fully_connected) {
     cc = connection_status_text_color[0];
     text = connection_status_text[0];
     if (connection_status_hide_counter > 0) connection_status_hide_counter--;

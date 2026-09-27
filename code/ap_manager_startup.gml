@@ -7,8 +7,13 @@ max_outgoing_tasks_per_tick = 10;
 cctx_read_cooldown = 0;
 li_read_cooldown = 0;
 
-alarm[0] = 1; // Read first
-alarm[1] = 2; // Then write
+
+if (global.AP_DEBUG) {
+    event_perform(ev_other, ev_user0); // Loads empty data. Disables the communication.
+} else {
+    alarm[0] = 1; // Read first
+    alarm[1] = 2; // Then write
+}
 
 local_last_ack = 0;
 

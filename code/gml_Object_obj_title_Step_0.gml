@@ -1,6 +1,6 @@
 
 if (view == "main") {
-    if (global.ap_state_initialized) {
+    if (global.ap_state_initialized || global.AP_DEBUG) {
         choice[1] = lMesStart[lang];
         toolTip[1] = lMesStartTool[lang];
         if (action[1] == -1 && selected == 1) {

@@ -225,6 +225,10 @@ for (i = 1; i <= 4; i++) {
     global.ap_item_level_rockPile[i] = has_detonator;
 }
 
+if (global.AP_DEBUG) {
+    for (i = 1; i <= 4; i++)  global.ap_item_level_rockPile[i] = 1;
+}
+
 if (!is_undefined(detonator_map)) ds_map_destroy(detonator_map);
 
 // Gourmet Gal
@@ -298,6 +302,11 @@ for (i = 0; i <= 16; i++) {
         These should be enabled once the gates are implemented in future versions.
     */
 }
+if (global.AP_DEBUG) {
+    global.trigger[4] = 1;
+    global.trigger[5] = 1;
+    global.trigger[6] = 1;
+}
 if (!is_undefined(trigger_list)) ds_list_destroy(trigger_list);
 
 // Stats
@@ -367,6 +376,14 @@ for (i = 1; i <= 10; i++) {
     global._wep_active[i] = ds_list_find_value(active_weapons, i);
 }
 if (!is_undefined(active_weapons)) ds_list_destroy(active_weapons);
+
+if (global.AP_DEBUG) {
+    for (i = 1; i <= 10; i++) {
+        global.ap_item_wep_obtained[i] = 1;
+        global.wep_active[i] = 1;
+    }
+    global.ap_item_wep_obtained[10] = 10;
+}
 
 global.ap_data_disable_update_signals = 0; // Re-enable data updates to client.
 global.ap_state_initialized = 1;

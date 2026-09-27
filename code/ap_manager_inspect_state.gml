@@ -1,4 +1,4 @@
-if (!global.ap_state_initialized) return;
+if (!global.ap_state_initialized || global.AP_DEBUG) return;
 var i, j;
 
 
