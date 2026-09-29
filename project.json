@@ -10,7 +10,8 @@
     ".vscode",
     "dist",
     "docs",
-    "source"
+    "source",
+    "releases"
   ],
   "SubProjects": [],
   "Patches": [],
