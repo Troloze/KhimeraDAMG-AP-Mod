@@ -1,25 +1,11 @@
-# open-in-umt.ps1
-# Launches the UndertaleModTool GUI with your game's data file loaded, ready
-# for Project -> Open project. See README.md for the full step-by-step.
-#
-# One-time setup (same env vars as build.ps1):
-#   $env:KHIMERA_SOURCE = "C:\Games\Khimera"
-#   $env:UMT_GUI        = "C:\Tools\UndertaleModTool\UndertaleModTool.exe"
-#
-# Usage:
-#   .\open-in-umt.ps1
-
 [CmdletBinding()]
 param(
-    [string] $Source = "D:\Games\Khimera",
-    [string] $Gui    = "D:\UndertaleModTool\UndertaleModTool.exe"
+    [string] $Gui    = "UndertaleModTool.exe",
+    [string] $SrcVer = "steam"
 )
-
+$Source = Join-Path (Join-Path $PSScriptRoot "source") $SrcVer
 $ErrorActionPreference = 'Stop'
 
-if ([string]::IsNullOrWhiteSpace($Source)) {
-    throw "No source game folder specified. Pass -Source <path>, or set `$env:KHIMERA_SOURCE once."
-}
 $sourceData = Join-Path $Source 'data.win'
 if (-not (Test-Path $sourceData)) { throw "data.win not found in source folder: $sourceData" }
 
@@ -29,7 +15,7 @@ if (-not (Test-Path $guiPath)) {
     if ($onPath) {
         $guiPath = $onPath.Source
     } else {
-        throw "UndertaleModTool.exe not found ('$Gui'). Pass -Gui <path>, set `$env:UMT_GUI, or put it on PATH."
+        throw "UndertaleModTool.exe not found ('$Gui')."
     }
 }
 
