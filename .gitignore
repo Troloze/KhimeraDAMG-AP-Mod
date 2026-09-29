@@ -10,5 +10,6 @@ Thumbs.db
 *.user
 
 todo
-
+/.modbackup/
+mod-backup-manifest.json
 *.win
