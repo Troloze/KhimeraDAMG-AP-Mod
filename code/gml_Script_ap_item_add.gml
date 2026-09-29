@@ -9,10 +9,10 @@ if (is_undefined(current_item_count)) {
 }
 
 if (ignore) return;
-var item_type = floor(item_id / 100000) % 100;
-var item_uid = item_id % 100000;
+var item_type = floor(item_id / global.AP_ID_TYPE) % 100;
+var item_uid = item_id % global.AP_ID_TYPE;
 
-if (item_type == 8) {
+if (item_type == global.AP_ITEM_TRAP) {
     // Traps
     switch (item_uid) {
         case 1:     // Balls
@@ -25,22 +25,13 @@ if (item_type == 8) {
             ds_queue_enqueue(filler_instance_queue, 6);
             break;
         case 4:     // Box 
-            var i, count = irandom(3) + 1;
-            
-            for (i = 0; i < count; i++) {
-                if (!irandom(1)) ds_queue_enqueue(filler_queue, -1);
-                if (!irandom(3)) ds_queue_enqueue(filler_queue, -1);
-                if (!irandom(7)) ds_queue_enqueue(filler_queue, -1);
-                ds_queue_enqueue(filler_queue, 7);
-            }
+            ds_queue_enqueue(filler_queue, 7);
             break;
         case 5:     // Random Enemy
             ds_queue_enqueue(filler_instance_queue, 8);
             break;
     }
-}
-
-if (item_type == 9) {
+} else if (item_type == global.AP_ITEM_FILLER) {
     // Filler
     switch (item_uid) {
         case 1:     // Coin Drop
@@ -59,4 +50,7 @@ if (item_type == 9) {
             ds_queue_enqueue(filler_instance_queue, 9);
             break;
     }
+} else {
+    // Others ( I don't have a way to find item name through id :( )
+    // var aa = ap_queue_splash(undefined, undefined, "RECEIVED: ");
 }

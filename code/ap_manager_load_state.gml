@@ -53,7 +53,6 @@ global.maxHP = 8;                        // * Four hearts.
 
 // Item state tracking
 
-
 global.ap_item_total_fairies = 0;        // * Used for tracking when a pause update should occur.
 global.ap_item_nme_obtained[38] = 0;     // * Only used when shuffle_books is on.
 global.ap_item_level_rockPile[17] = 0;   // * Only used when shuffle_detonators is on.
@@ -109,7 +108,7 @@ if (is_undefined(top_time_list)) {
 }
 for (i = 0; i <= 17; i++) {
     // Stage clear?
-    var stage_location = i * 10000000 + 100001;
+    var stage_location = ap_location_make(i, global.AP_LOC_CLEAR, 1);
     var is_clear = ap_location_get(stage_location); // Some of the iterated locations do not exist. This is fine, it will simply return 0 (false).
     global.level_complete[i] = is_clear;
     global._level_complete[i] = is_clear
@@ -156,10 +155,7 @@ if (!ap_option_get("shuffle_fairies") && is_undefined(fairy_map)) {
 }
 for (i = 0; i <= 17; i++) {
     for (j = 1; j <= global.level_hasFairies[i]; j++) {
-        var fairy_location = 
-            i * 10000000 +  // Stage 
-            200000 +        // Fairy
-            j;              // Identifier
+        var fairy_location = ap_location_make(i, global.AP_LOC_FAIRY, j);
         var has_fairy;
         if (ap_option_get("shuffle_fairies")) has_fairy = ap_location_get(fairy_location);
         else has_fairy = ds_map_exists(fairy_map, fairy_location);
@@ -170,7 +166,7 @@ for (i = 0; i <= 17; i++) {
 }
 if (!is_undefined(fairy_map)) ds_map_destroy(fairy_map);
 
-global.ap_item_total_fairies = ap_item_get(500200001);
+global.ap_item_total_fairies = ap_item_get(global.AP_FAIRY_ID);
 
 // Books 
 var book_map = ap_data_get("books");
@@ -207,9 +203,7 @@ if (!ap_option_get("shuffle_detonators") && is_undefined(detonator_map)) {
     detonator_map = ap_data_get("detonators");
 }
 for (i = 1; i <= 4; i++) {
-    var detonator_location =    
-        i * 10000000 +  // Stage 
-        500001;         // Detonator
+    var detonator_location = ap_location_make(i, global.AP_LOC_DETONATOR, 1);
     var has_detonator;
     if (ap_option_get("shuffle_detonators")) has_detonator = ap_location_get(detonator_location);
     else if (!is_undefined(detonator_map)) has_detonator = ds_map_exists(detonator_map, detonator_location);
@@ -219,7 +213,7 @@ for (i = 1; i <= 4; i++) {
     global._level_rockPile[i] = has_detonator;
     
     // Item
-    var detonator_item = 500500000 + i;
+    var detonator_item = ap_item_make(global.AP_ITEM_DETONATOR, i);
     if (ap_option_get("shuffle_detonators")) has_detonator = ap_item_get(detonator_item);
     // else has_detonator = ds_map_exists // Value already set.
     global.ap_item_level_rockPile[i] = has_detonator;
@@ -239,9 +233,7 @@ if (!ap_option_get("shuffle_gourmet_gal") && is_undefined(ggal_map)) {
     ggal_map = ap_data_get("gourmet_gal");
 }
 for (i = 1; i <= 4; i++) {
-    var ggal_location =    
-        i * 10000000 +  // Stage 
-        600001;         // Gourmet Gal
+    var ggal_location = ap_location_make(i, global.AP_LOC_GOURMET_GAL, 1);
     var has_ggal;
     if (ap_option_get("shuffle_gourmet_gal")) has_ggal = ap_location_get(ggal_location);
     else if (!is_undefined(ggal_map)) has_ggal = ds_map_exists(ggal_map, ggal_location);
@@ -251,7 +243,7 @@ for (i = 1; i <= 4; i++) {
     global._level_food[i] = has_ggal;
     
     // Item
-    var food_item = 500600000 + i;
+    var food_item = ap_item_make(global.AP_ITEM_GOURMET_GAL, i);
     if (ap_option_get("shuffle_gourmet_gal")) has_ggal = ap_item_get(food_item);
     // else has_ggal = ds_map_exists // Value already set.
     global.ap_item_level_food[i] = has_ggal;
@@ -336,9 +328,7 @@ global.wep_obtained[1] = 1; // Golem fist, always available.
 global._wep_obtained[1] = 1; 
 global.ap_item_wep_obtained[1] = 1;
 for (i = 1; i <= 8; i++) { // All stage upgrades.
-    var weapon_location =   
-        i * 10000000 +  // Stage
-        100002;         // Upgrade
+    var weapon_location = ap_location_make(i, global.AP_LOC_CLEAR, 2);
     // No undefined checks, if this explodes it means I messed up and I need to know.
     var weapon_id = ap_misc_weapon_loc_to_id(weapon_location);    
     // location
@@ -346,7 +336,7 @@ for (i = 1; i <= 8; i++) { // All stage upgrades.
     global._wep_obtained[weapon_id] = ap_location_get(weapon_location);
     
     // Item
-    var weapon_item = 500000000 + i;
+    var weapon_item = ap_item_make(global.AP_ITEM_WEAPON, i);
     global.ap_item_wep_obtained[weapon_id] = ap_item_get(weapon_item);
 }
 

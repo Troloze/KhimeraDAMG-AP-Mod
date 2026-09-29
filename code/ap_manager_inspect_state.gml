@@ -1,6 +1,6 @@
-if (!global.ap_state_initialized || global.AP_DEBUG) return;
+if (!global.ap_state_initialized) return;
+if (global.AP_DEBUG) return;
 var i, j;
-
 
 var robin_max = 4;  // cycles from 0 to robin_max (inclusive)
 
@@ -12,7 +12,7 @@ if (inspector_round_robin == 0) {
         if (i == 9 || i == 13 || i == 14 || i == 15 || i == 16 || i == 17) continue;
         // Clear
         if (global.level_complete[i] != global._level_complete[i]) {
-            var clear_location = i * 10000000 + 100001;
+            var clear_location = ap_location_make(i, global.AP_LOC_CLEAR, 1);
             if (!ap_location_get(clear_location)) ds_map_replace(global.ap_local_locations, clear_location, 1); // Send the location.
             
             global._level_complete[i] = global.level_complete[i];
@@ -86,10 +86,7 @@ if (inspector_round_robin == 1) {
         for (j = 1; j <= global.level_hasFairies[i]; j++) {
             
             if (global.level_fairy[i, j] != global._level_fairy[i, j]) {
-                var fairy_location = 
-                    i * 10000000 +  // Stage 
-                    200000 +        // Fairy
-                    j;              // Identifier
+                var fairy_location = ap_location_make(i, global.AP_LOC_FAIRY, j);
                 if (ap_option_get("shuffle_fairies")) {
                     if (!ap_location_get(fairy_location)) ds_map_replace(global.ap_local_locations, fairy_location, 1); // Send the location.
                 } else {
@@ -142,9 +139,7 @@ if (inspector_round_robin == 2) {
     for (i = 1; i <= 4; i++) {
         // Location
         if (global.level_rockPile[i] != global._level_rockPile[i]) {
-            var detonator_location =    
-                i * 10000000 +  // Stage 
-                500001;         // Identifier
+            var detonator_location = ap_location_make(i, global.AP_LOC_DETONATOR, 1);      
             if (ap_option_get("shuffle_detonators")) {
                 if (!ap_location_get(detonator_location)) ds_map_replace(global.ap_local_locations, detonator_location, 1); // Send the location.
             } else {
@@ -156,7 +151,7 @@ if (inspector_round_robin == 2) {
             global._level_rockPile[i] = global.level_rockPile[i];
         }
         // Item
-        var detonator_item = 500500000 + i;
+        var detonator_item = ap_item_make(global.AP_ITEM_DETONATOR, i);
         if (ap_item_get(detonator_item) && !global.ap_item_level_rockPile[i]) {
             global.ap_item_level_rockPile[i] = 1;
             with (obj_pause) issue_update = 1; // Update pause stats.
@@ -171,9 +166,7 @@ if (inspector_round_robin == 2) {
     for (i = 1; i <= 4; i++) {
         // Location
         if (global.level_food[i] != global._level_food[i]) {
-            var ggal_location =    
-                i * 10000000 +  // Stage 
-                600001;         // Identifier
+            var ggal_location = ap_location_make(i, global.AP_LOC_GOURMET_GAL, 1);   
             if (ap_option_get("shuffle_gourmet_gal")) {
                 if (!ap_location_get(ggal_location)) ds_map_replace(global.ap_local_locations, ggal_location, 1); // Send the location.
             } else {
@@ -190,7 +183,7 @@ if (inspector_round_robin == 2) {
             global._level_food[i] = global.level_food[i];
         }
         // Item
-        var ggal_item = 500600000 + i;
+        var ggal_item = ap_item_make(global.AP_ITEM_GOURMET_GAL, i);
         if (ap_item_get(ggal_item) && !global.ap_item_level_food[i]) {
             global.ap_item_level_food[i] = 1;
             with (obj_pause) issue_update = 1; // Update pause stats.

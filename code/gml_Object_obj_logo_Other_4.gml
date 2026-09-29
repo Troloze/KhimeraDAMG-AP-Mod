@@ -1,0 +1,1 @@
+ap_init(); // Ap mod initializer.

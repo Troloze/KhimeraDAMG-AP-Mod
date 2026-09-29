@@ -3,7 +3,9 @@ with (obj_chelshia) {
     if (canmove) can_dispense = 1;
 }
 
+if (!ds_queue_empty(global.ap_splash_queue) || instance_exists(ap_ef_splash_text)) can_dispense = 0;
 alarm[2] = dispenser_attempt_cooldown;
+
 if (!can_dispense) return;
 
 var is_trap_cooldown = 0;
@@ -25,12 +27,12 @@ if (!ds_map_empty(trap_entities)) {
     }
 }
 
+instance_cooldown_tracker = max(0, instance_cooldown_tracker - 1);
+
 if (is_trap_cooldown && instance_cooldown_tracker <= 0) {
     instance_cooldown_tracker = dispenser_instance_cooldown_max_cycles
     is_trap_cooldown = 0;
 }
-
-instance_cooldown_tracker -= 1;
 
 var action = undefined;
 if (!is_trap_cooldown && !ds_queue_empty(filler_instance_queue)) {
@@ -46,22 +48,26 @@ with (obj_chelshia) {
     c_x = x + other.chelshia_center_displacement_x;
     c_y = y + other.chelshia_center_displacement_y;
 }
-var x_left, y_top, x_center, y_center, x_right, y_bottom, i;
+var x_left, y_top, x_center, y_center, x_right, y_bottom, i, taa;
 switch (action) {
     case -1: // Wait a few moments ----------------------------------------------------------------------------------------------------------------
-        alarm[2] = irandom(180) + 60;
+        alarm[2] = floor((random(4) + 1) * dispenser_attempt_cooldown);
         break;
     case 0: // coin ----------------------------------------------------------------------------------------------------------------
         scr_dropMoney(c_x, c_y - 50, choose(1, 5, 10));
+        ap_queue_splash(undefined, undefined, "COIN DROP");
         break;
     case 1: // Small treasure ----------------------------------------------------------------------------------------------------------------
-        scr_dropMoney(c_x, c_y - 50, irandom(60) + 15);
+        scr_dropMoney(c_x, c_y - 50, choose(1, 5, 10));
+        ap_queue_splash(undefined, undefined, "SMALL TREASURE DROP");
         break;
     case 2: // Big treasure ----------------------------------------------------------------------------------------------------------------
-        scr_dropMoney(c_x, c_y - 50, irandom(130) + 120);
+        scr_dropMoney(c_x, c_y - 50, 100);
+        ap_queue_splash(undefined, undefined, "BIG TREASURE DROP");
         break;
     case 3: // Food ----------------------------------------------------------------------------------------------------------------
         instance_create(c_x, c_y - 50, obj_food);
+        ap_queue_splash(undefined, undefined, "FOOD DROP");
         break;
     case 4: // Balls ----------------------------------------------------------------------------------------------------------------
         x_center = view_xview + view_wview / 2; // Center of the screen
@@ -85,6 +91,7 @@ switch (action) {
         ds_map_replace(trap_entities, aa3, ap_enemy_tracker_get_id(aa3));
         instance_cooldown_tracker = dispenser_instance_cooldown_max_cycles;
         scr_supersound(snd_sheen, global.v_snd, 0);
+        ap_queue_splash(undefined, make_color_rgb(230, 57, 57), "BALLS");
         break;
     case 5: // Aviator Swarm ----------------------------------------------------------------------------------------------------------------
         var pos_disp = 0.15
@@ -138,21 +145,28 @@ switch (action) {
             var p_y = y_top + ((v_count + 1 - i) / (v_count + 1)) * y_delta;
             if (!disable_left) {
                 c_aa = instance_create(x_left, p_y, obj_nme_followFluff);
+                c_aa.value = 0;
+                c_aa.banFood = 1;
+                c_aa.canIncrementKillCounter = 0;
                 scr_ef_smoke(x_left, p_y);
                 ds_map_replace(trap_entities, c_aa, ap_enemy_tracker_get_id(c_aa));
             }
             if (!disable_right) {
                 c_aa = instance_create(x_right, p_y, obj_nme_followFluff);
+                c_aa.value = 0;
+                c_aa.banFood = 1;
+                c_aa.canIncrementKillCounter = 0;
                 scr_ef_smoke(x_right, p_y);
                 ds_map_replace(trap_entities, c_aa, ap_enemy_tracker_get_id(c_aa));
             }
         }
         instance_cooldown_tracker = dispenser_instance_cooldown_max_cycles;
         scr_supersound(snd_sheen, global.v_snd, 0);
+        ap_queue_splash(undefined, make_color_rgb(230, 57, 57), "AVIATOR SWARM");
         break;
     case 6: // Kiran Drive-By ----------------------------------------------------------------------------------------------------------------
         if (instance_exists(obj_nme_witchControl)) {
-            ds_queue_enqueue(filler_instance_queue, 7);
+            ds_queue_enqueue(filler_instance_queue, 6);
             break;
         }
         y_top = view_yview + view_hview * 0.2; // Almost at the top of the 
@@ -175,12 +189,13 @@ switch (action) {
         ds_map_replace(trap_entities, k_aa, ap_enemy_tracker_get_id(k_aa));
         instance_cooldown_tracker = dispenser_instance_cooldown_max_cycles;
         scr_supersound(snd_sheen, global.v_snd, 0);
+        ap_queue_splash(undefined, make_color_rgb(230, 57, 57), "KIRAN DRIVE-BY");
         break;
     case 7: // Box Trap ----------------------------------------------------------------------------------------------------------------
         with (obj_chelshia) {
             if (chestMode) {
                 ds_queue_enqueue(other.filler_queue, -1);
-                ds_queue_enqueue(other.filler_queue, 6);
+                ds_queue_enqueue(other.filler_queue, 7);
                 break;
             }
             event_perform(ev_other, ev_user8);
@@ -194,6 +209,7 @@ switch (action) {
             cangrav = 1;
             scr_supersound(18, global.v_snd, 0);
             event_perform(ev_other, ev_user3);
+            ap_queue_splash(undefined, make_color_rgb(230, 57, 57), "BOX");
         }
         break;
     case 8: // Random Enemy Trap ----------------------------------------------------------------------------------------------------------------
@@ -224,6 +240,7 @@ switch (action) {
         scr_ef_smoke(p_x, c_y - 30);
         ds_map_replace(trap_entities, r_aa, ap_enemy_tracker_get_id(r_aa));
         instance_cooldown_tracker = dispenser_instance_cooldown_max_cycles;
+        ap_queue_splash(undefined, make_color_rgb(230, 57, 57), "RANDOM ENEMY");
         break;
     case 9: // Kiran Drive-Thru ----------------------------------------------------------------------------------------------------------------
         if (instance_exists(obj_nme_witchControl)) {
@@ -251,6 +268,7 @@ switch (action) {
         ds_map_replace(trap_entities, k_aa, ap_enemy_tracker_get_id(k_aa));
         instance_cooldown_tracker = dispenser_instance_cooldown_max_cycles;
         scr_supersound(snd_sheen, global.v_snd, 0);
+        ap_queue_splash(undefined, undefined, "KIRAN DRIVE-THRU");
         break;
 }
 

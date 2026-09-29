@@ -1,0 +1,19 @@
+text = "SAMPLE TEXT"; 
+color = make_color_rgb(255, 255, 255);
+alpha = 1.0;
+bg_color = make_color_rgb(0, 0, 0);
+bg_alpha = 0.5;
+padding = 5;
+time = 30;
+tr_time = 9;
+font = fnt_score;
+trim_top = 0;
+trim_bottom = 3;
+trim_left = 0;
+trim_right = 2;
+draw_height_from_center = 50;
+t = 0;
+draw = 0;
+disabled = 1;
+alarm[0] = 1;
+

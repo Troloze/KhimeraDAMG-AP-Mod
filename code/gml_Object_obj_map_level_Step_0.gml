@@ -1,5 +1,5 @@
-var lock_item = 500100000 + index + 1
-var clear_loc =  10000000 * index + 100001;
+var lock_item = ap_item_make(global.AP_ITEM_STAGE, index + 1);
+var clear_loc = ap_location_make(index, global.AP_LOC_CLEAR, 1);
 
 if (!ap_item_get(lock_item)){
     visible = true;
