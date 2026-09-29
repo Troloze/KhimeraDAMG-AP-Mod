@@ -10,6 +10,9 @@ var cx = room_width - 70, cy = room_height - 45;
 var ap_squeeze = 0.62;
 var ap_fade = 0.35;
 
+var archipelago_spin_rate = 4.5; // degrees per second.
+archipelago_spin += clamp(delta_time/1000000, 0.1, 1.0) * archipelago_spin_rate;
+
 while (archipelago_spin < 0) archipelago_spin += 360;
 while (archipelago_spin > 361) archipelago_spin -= 360;
 
@@ -20,10 +23,6 @@ ap_draw_order_current[2] = (8 - order_displacement)  % 6;
 ap_draw_order_current[3] = (11 - order_displacement) % 6;
 ap_draw_order_current[4] = (10 - order_displacement) % 6;
 ap_draw_order_current[5] = (9 - order_displacement)  % 6;
-
-
-var archipelago_spin_rate = 4.5; // degrees per second.
-archipelago_spin += clamp(delta_time/1000000, 0.1, 1.0) * archipelago_spin_rate;
 
 for (i = 0; i < 6; i++) {
     var _i = ap_draw_order_current[i];
