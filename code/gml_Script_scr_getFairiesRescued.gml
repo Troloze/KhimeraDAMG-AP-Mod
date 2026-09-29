@@ -13,4 +13,4 @@ if (!ap_option_get("shuffle_fairies")) {
     return scrT;
 }
 
-return ap_item_get(500200001);
+return ap_item_get(global.AP_FAIRY_ID);

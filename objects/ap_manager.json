@@ -39,7 +39,12 @@
     {
       "Category": "Alarm",
       "Subtype": "11",
-      "CodeEntry": "gml_Object_ap_manager_Alarm_11"
+      "CodeEntry": "ap_manager_map_death_link_sequence"
+    },
+    {
+      "Category": "Alarm",
+      "Subtype": "2",
+      "CodeEntry": "ap_manager_filler_dispenser"
     },
     {
       "Category": "Step",
@@ -55,6 +60,11 @@
       "Category": "Step",
       "Subtype": "EndStep",
       "CodeEntry": "ap_manager_end_step"
+    },
+    {
+      "Category": "Keyboard",
+      "Subtype": "vk_tab",
+      "CodeEntry": "gml_Object_ap_manager_Keyboard_9"
     },
     {
       "Category": "Other",
@@ -82,9 +92,19 @@
       "CodeEntry": "ap_manager_update_state_from_location"
     },
     {
+      "Category": "Other",
+      "Subtype": "User3",
+      "CodeEntry": "ap_manager_append_message_to_log"
+    },
+    {
       "Category": "Draw",
       "Subtype": "DrawGUIEnd",
-      "CodeEntry": "ap_manager_draw_connection_status"
+      "CodeEntry": "ap_manager_draw_gui"
+    },
+    {
+      "Category": "KeyRelease",
+      "Subtype": "vk_tab",
+      "CodeEntry": "gml_Object_ap_manager_KeyRelease_9"
     }
   ]
 }

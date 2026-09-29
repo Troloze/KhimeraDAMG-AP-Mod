@@ -2,9 +2,9 @@
 
 if (!is_undefined(ds_map_find_value(global.ap_acked_locations, new_location))) return;
 
-var stage_id = floor(new_location / 10000000);
-var loc_type = floor(new_location / 100000) % 100;
-var identifier = new_location % 100000;
+var stage_id = floor(new_location / global.AP_ID_STAGE);
+var loc_type = floor(new_location / global.AP_ID_TYPE) % 100;
+var identifier = new_location % global.AP_ID_TYPE;
 switch(loc_type) {
     case 0: // General
         // No general locations in the current version.

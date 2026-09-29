@@ -12,8 +12,8 @@ if (canmove && global.Apress)
     
     if (lvl != -4)
     {
-        var unlock_item = 500100000 + lvl.index + 1;
-        if (ap_item_get(unlock_item)) {
+        var unlock_item = ap_item_make(global.AP_ITEM_STAGE, lvl.index + 1); 
+        if (ap_item_get(unlock_item) || global.AP_DEBUG) {
             // enter stage
             scr_fademusic();
             scr_supersound(18, global.v_snd, 0);

@@ -1,0 +1,1 @@
+ap_enemy_tracker_remove(id);

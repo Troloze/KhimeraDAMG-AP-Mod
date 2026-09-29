@@ -536,28 +536,30 @@ if (root_hi != -1) ds_map_destroy(root_hi);
 // Process flags after files so cctx can be read before global.ap_fully_connected is set to true on a reconnection.
 
 var hb_delta = (current_time - global.ap_last_client_heartbeat_time) / 1000;
-if (is_undefined(cshb)) {
-    // Delta in seconds.
-    if (global.ap_client_connected && hb_delta > global.ap_max_heartbeat_delta) {
-        global.ap_client_connected = 0;
-    }
-} else {
-    if (real(cshb) == global.ap_last_client_heartbeat) {
+
+if (global.ap_has_cctx) {
+    if (is_undefined(cshb)) {
+        // Delta in seconds.
         if (global.ap_client_connected && hb_delta > global.ap_max_heartbeat_delta) {
             global.ap_client_connected = 0;
         }
-    } else { 
-        global.ap_last_client_heartbeat = real(cshb);
-        global.ap_last_client_heartbeat_time = current_time;
-        global.ap_client_connected = 1;
+    } else {
+        if (real(cshb) == global.ap_last_client_heartbeat) {
+            if (global.ap_client_connected && hb_delta > global.ap_max_heartbeat_delta) {
+                global.ap_client_connected = 0;
+            }
+        } else { 
+            global.ap_last_client_heartbeat = real(cshb);
+            global.ap_last_client_heartbeat_time = current_time;
+            global.ap_client_connected = 1;
+        }
     }
+    
+    if (global.ap_client_connected) {
+        if (is_undefined(csc)) global.ap_fully_connected = 0;
+        else global.ap_fully_connected = real(csc);
+    } else global.ap_fully_connected = 0;
 }
-
-if (global.ap_client_connected) {
-    if (is_undefined(csc)) global.ap_fully_connected = 0;
-    else global.ap_fully_connected = real(csc);
-} else global.ap_fully_connected = 0;
-
 
 // Maintains the observer loop
 alarm[0] = observer_tick;
