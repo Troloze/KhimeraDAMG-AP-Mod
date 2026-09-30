@@ -1,5 +1,5 @@
 <!-- This file is partially AI generated. -->
-# KhimeraMod
+# Khimera: Destroy All Monster Girls - Archipelago Randomizer Mod
 
 A GameMaker mod project for Khimera: Destroy All Monster Girls, built with [UndertaleModTool](https://github.com/UnderminersTeam/UndertaleModTool)'s
 project system. **This repository does not contain any of the original game.**
