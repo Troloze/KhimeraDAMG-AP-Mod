@@ -1,18 +1,27 @@
 {
-  "Name": "KhimeraMod",
+  "Name": "Khimera: Destroy All Monster Girls - Archipelago Randomizer",
   "Flags": [],
   "VerifyStrings": [
     "Khimera: Destroy all Monster Girls"
   ],
   "AssetsDataFilePath": null,
   "ErrorOnWarnings": true,
-  "ExcludeDirectories": [],
+  "ExcludeDirectories": [
+    ".vscode",
+    "dist",
+    "docs",
+    "source",
+    "releases"
+  ],
   "SubProjects": [],
   "Patches": [],
   "ExternalFiles": [],
   "FileCopies": [],
   "FileDeletes": [],
-  "PreImportScripts": [],
+  "PreImportScripts": [
+    "PostScripts/set_sandbox.csx",
+    "PostScripts/set_window_name.csx"
+  ],
   "PreAssetImportScripts": [],
   "PostImportScripts": []
 }

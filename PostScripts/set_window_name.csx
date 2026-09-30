@@ -1,0 +1,1 @@
+Data.GeneralInfo.DisplayName = Data.Strings.MakeString("Khimera: Destroy All Monster Girls - Archipelago Randomizer");

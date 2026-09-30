@@ -1,0 +1,14 @@
+action_inherited();
+value = 0;
+HP = 1;
+dmg = 1;
+dire = 0;
+canForce = 0;
+hitstunImg = 5;
+image_speed = 0;
+yRot = 0;
+throwing = 0;
+alarm[0] = 35;
+idleImg = 0;
+alarm[1] = 10;
+thru = 0;

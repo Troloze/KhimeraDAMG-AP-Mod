@@ -1,0 +1,5 @@
+{
+  "$type": "Script",
+  "DataName": null,
+  "Code": "gml_Script_ap_communication_get_message"
+}

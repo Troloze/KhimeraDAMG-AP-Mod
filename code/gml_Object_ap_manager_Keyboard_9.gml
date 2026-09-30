@@ -1,0 +1,1 @@
+if (++text_tab_count > text_tab_required) text_full_display = 1;
