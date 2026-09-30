@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [string] $dist = "steam"
+    [string] $Cli = "UndertaleModCLI.exe",
+    [string] $Dist = "steam"
 )
 
 $root = $PSScriptRoot
@@ -8,5 +9,5 @@ $root = $PSScriptRoot
 $build = Join-Path $root "build.ps1"
 $run = Join-Path $root "run.ps1"
 
-& $build -only $dist
-& $run -dist $dist
+& $build -Cli $Cli -only $Dist
+& $run -dist $Dist
