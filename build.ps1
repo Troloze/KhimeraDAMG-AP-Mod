@@ -1,3 +1,4 @@
+# This file is partially AI generated.
 [CmdletBinding()]
 param(
     [string] $Cli    = "UndertaleModCLI.exe",
@@ -6,18 +7,29 @@ param(
     [string] $Version = ""
 )
 
+if ($release -and ($only -ne "")) {$only = ""}
+
 $OutputBase = Join-Path $PSScriptRoot "dist"
 $SourceBase = Join-Path $PSScriptRoot "source"
 $ReleaseBase = Join-Path $PSScriptRoot "releases"
+$ReleaseFolder = Join-Path $ReleaseBase $Version
 $ProjectFile = Join-Path $PSScriptRoot "project.json"
 $ErrorActionPreference = 'Stop'
 
-Get-ChildItem -Path $SourceBase -Directory | ForEach-Object {
+$Folders = (Get-ChildItem -Path $SourceBase -Directory)
+$FolderCount = $Folders.Length
+
+if ($FolderCount -eq 0) {throw "$SourceBase has no children."}
+
+$CliExists = Get-Command $Cli -ErrorAction SilentlyContinue
+if (-not $CliExists) {throw "Could not find UndertaleModCLI, set its path with -Cli or add it to PATH"}
+
+$Folders | ForEach-Object {
     $Output = Join-Path $OutputBase $_.Name
     $Source = $_.FullName
     $cliPath = $Cli
 
-    if (($only -ne "") -and ($only -eq $_.Name)) {
+    if (($only -eq "") -or ($only -eq $_.Name)) {
         if (-not (Test-Path $Output)) {
             Write-Host "Creating playtest copy at $Output ..." -ForegroundColor Cyan
             New-Item -ItemType Directory -Path $Output -Force | Out-Null
@@ -42,12 +54,23 @@ Get-ChildItem -Path $SourceBase -Directory | ForEach-Object {
 
         if ($Release) {
             if ($Version -eq "") {throw "Please provide a version"}
-            $ReleasePath = Join-Path (Join-Path $ReleaseBase $Version) $_.Name
+            $ReleasePath = Join-Path $ReleaseFolder $_.Name
+            #New-Item -ItemType Directory -Path $ReleaseBase -Force
             New-Item -ItemType Directory -Path $ReleasePath -Force
-            $HashPath = Join-Path $ReleasePath "source_hash.txt"
-            $DiffPath = Join-Path $ReleasePath ("khimeraAP-{0}-{1}.bsdiff4" -f $_.Name, $Version)
-            python .\make_release.py $SrcData $DestData $DiffPath
-            python .\make_hash.py $SrcData $HashPath
+            $DiffName = "kdamg_diff.bsdiff4" -f $_.Name, $Version
+            $HashName = "kdamg_hash.json" -f $_.Name, $Version
+            $HashPath = Join-Path $ReleasePath $HashName
+            $DiffPath = Join-Path $ReleasePath $DiffName
+            
+            python (Join-Path $PSScriptRoot "make_release.py") $SrcData $DestData $DiffPath
+            if ($LASTEXITCODE -ne 0) { throw "Diff maker failed with exit code: $LASTEXITCODE" }
+            python (Join-Path $PSScriptRoot "make_hash.py") $SrcData $DestData $Version $HashPath
+            if ($LASTEXITCODE -ne 0) { throw "Hash maker failed with exit code: $LASTEXITCODE" }
         }
     }
+}
+
+if ($Release) {
+    Compress-Archive -Path ("{0}\*" -f $ReleaseFolder) -DestinationPath ("{0}.zip" -f $ReleaseFolder) -Force
+    Remove-Item -Path $ReleaseFolder -Recurse -Force
 }
