@@ -1,7 +1,7 @@
 <!-- This file is partially AI generated. -->
 # Khimera: Destroy All Monster Girls - Archipelago Randomizer Mod
 
-** THIS MOD DOES NOT WORK ON ITS OWN, GET THE APWORLD VIA THE [MAIN REPOSITORY](https://github.com/Troloze/KhimeraDAMG-AP) IN ORDER TO PLAY IT ** 
+**THIS MOD DOES NOT WORK ON ITS OWN, GET THE APWORLD VIA THE [MAIN REPOSITORY](https://github.com/Troloze/KhimeraDAMG-AP) IN ORDER TO PLAY IT** 
 
 An archipelago multiworld randomizer for the game Khimera: Destroy All Monster Girls, built with [UndertaleModTool](https://github.com/UnderminersTeam/UndertaleModTool)'s project system. **This repository does not contain any of the original game.**
 It contains only files this mod adds or changes; everything else is pulled at build time from your own legally-owned copy of the game.
