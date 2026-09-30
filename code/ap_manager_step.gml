@@ -2,6 +2,12 @@ var task, t_type, loc_id, sender, item_index, item_id, dl_id, message, dack_id, 
 
 ap_misc_debug_filler_append_routine();
 
+if (!window_has_focus()) {
+    text_tab_count = 0;
+    text_full_display = 0;
+}
+
+
 // Incoming Tasks.
 for (i = 0; i < max_incomming_tasks_per_step; i++) {
     if (ds_queue_empty(global.ap_incomming_tasks)) break;

@@ -47,6 +47,11 @@
       "CodeEntry": "ap_manager_filler_dispenser"
     },
     {
+      "Category": "Alarm",
+      "Subtype": "3",
+      "CodeEntry": "gml_Object_ap_manager_Alarm_3"
+    },
+    {
       "Category": "Step",
       "Subtype": "BeginStep",
       "CodeEntry": "ap_manager_begin_step"

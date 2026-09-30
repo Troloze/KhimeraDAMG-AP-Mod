@@ -55,19 +55,23 @@ switch (action) {
         break;
     case 0: // coin ----------------------------------------------------------------------------------------------------------------
         scr_dropMoney(c_x, c_y - 50, choose(1, 5, 10));
-        ap_queue_splash(undefined, undefined, "COIN DROP");
+        scr_ef_smoke(c_x, c_y - 50);
+        //ap_queue_splash(undefined, undefined, "COIN DROP");
         break;
     case 1: // Small treasure ----------------------------------------------------------------------------------------------------------------
         scr_dropMoney(c_x, c_y - 50, choose(1, 5, 10));
-        ap_queue_splash(undefined, undefined, "SMALL TREASURE DROP");
+        scr_ef_smoke(c_x, c_y - 50);
+        //ap_queue_splash(undefined, undefined, "SMALL TREASURE DROP");
         break;
     case 2: // Big treasure ----------------------------------------------------------------------------------------------------------------
         scr_dropMoney(c_x, c_y - 50, 100);
-        ap_queue_splash(undefined, undefined, "BIG TREASURE DROP");
+        scr_ef_smoke(c_x, c_y - 50);
+        //ap_queue_splash(undefined, undefined, "BIG TREASURE DROP");
         break;
     case 3: // Food ----------------------------------------------------------------------------------------------------------------
         instance_create(c_x, c_y - 50, obj_food);
-        ap_queue_splash(undefined, undefined, "FOOD DROP");
+        scr_ef_smoke(c_x, c_y - 50);
+        //ap_queue_splash(undefined, undefined, "FOOD DROP");
         break;
     case 4: // Balls ----------------------------------------------------------------------------------------------------------------
         x_center = view_xview + view_wview / 2; // Center of the screen
@@ -208,6 +212,7 @@ switch (action) {
             blinking = 0;
             cangrav = 1;
             scr_supersound(18, global.v_snd, 0);
+            scr_supersound(snd_sheen, global.v_snd, 0);
             event_perform(ev_other, ev_user3);
             ap_queue_splash(undefined, make_color_rgb(230, 57, 57), "BOX");
         }
@@ -241,6 +246,7 @@ switch (action) {
         ds_map_replace(trap_entities, r_aa, ap_enemy_tracker_get_id(r_aa));
         instance_cooldown_tracker = dispenser_instance_cooldown_max_cycles;
         ap_queue_splash(undefined, make_color_rgb(230, 57, 57), "RANDOM ENEMY");
+        scr_supersound(snd_sheen, global.v_snd, 0);
         break;
     case 9: // Kiran Drive-Thru ----------------------------------------------------------------------------------------------------------------
         if (instance_exists(obj_nme_witchControl)) {

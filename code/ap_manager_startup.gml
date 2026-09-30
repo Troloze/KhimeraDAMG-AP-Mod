@@ -39,6 +39,7 @@ alarm[2] = dispenser_attempt_cooldown;
 
 // Archipelago GUI
 // Text Messages
+text_enabled = 1;
 text_message_cap = 150;
 text_current_messages = 0;
 text_last_index = 0;
@@ -46,7 +47,6 @@ text_fields = 3;
 message_field = 0;
 time_field = 1;
 type_field = 2;
-text_log = ds_grid_create(text_fields, text_message_cap);
 text_line_width = 200;
 text_max_lines = 3;
 text_length_hard_cap = 300;
@@ -63,10 +63,36 @@ text_time = text_timeout + text_timeout_fade;
 current_message = undefined;
 
 text_full_display = 0;
-text_partial_threshold = 50;
+text_partial_line_max = 2;
 
+text_chelshia_overlay = 0;
+text_chelshia_overlay_count = 12;
+text_chelshia_overlay_alpha = 0.3;
+
+text_tap_threshold = 12;
 text_tab_required = 30;
 text_tab_count = 0;
+
+text_tutorial_time = 300;
+
+text_log = ds_grid_create(text_fields, 2);
+
+current_message[0] = "Press tab to toggle chat.";
+current_message[1] = text_tutorial_time;
+current_message[2] = 0;
+event_perform(ev_other, ev_user3);
+
+current_message[0] = "Hold tab to display the full chat.";
+current_message[1] = text_tutorial_time;
+current_message[2] = 0;
+event_perform(ev_other, ev_user3);
+
+text_log_ = text_log;
+text_current_messages_ = text_current_messages;
+text_last_index_ = text_last_index;
+text_log = ds_grid_create(text_fields, text_message_cap);
+text_current_messages = 0;
+text_last_index = 0;
 
 // Connection Status
 connection_status_background_color = make_color_rgb(0, 0, 0);
