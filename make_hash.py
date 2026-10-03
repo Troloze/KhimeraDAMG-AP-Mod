@@ -14,18 +14,20 @@ output = sys.argv[4]
 hash_data = {}
 
 with open(source, "rb") as f:
-    digest_sha256 = hashlib.file_digest(f, "sha256")
-    digest_md5 = hashlib.file_digest(f, "md5")
+    source_digest_sha256 = hashlib.file_digest(f, "sha256")
+    f.seek(0)
+    source_digest_md5 = hashlib.file_digest(f, "md5")
 
-hash_data["source_sha256"] = digest_sha256.hexdigest()
-hash_data["source_md5"] = digest_md5.hexdigest()
+hash_data["source_sha256"] = source_digest_sha256.hexdigest()
+hash_data["source_md5"] = source_digest_md5.hexdigest()
 
 with open(modded, "rb") as f:
-    digest_sha256 = hashlib.file_digest(f, "sha256")
-    digest_md5 = hashlib.file_digest(f, "md5")
+    result_digest_sha256 = hashlib.file_digest(f, "sha256")
+    f.seek(0)
+    result_digest_md5 = hashlib.file_digest(f, "md5")
 
-hash_data["result_sha256"] = digest_sha256.hexdigest()
-hash_data["result_md5"] = digest_md5.hexdigest()
+hash_data["result_sha256"] = result_digest_sha256.hexdigest()
+hash_data["result_md5"] = result_digest_md5.hexdigest()
 
 hash_data["version"] = version
 
