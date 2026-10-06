@@ -58,14 +58,14 @@ $Folders | ForEach-Object {
             #New-Item -ItemType Directory -Path $ReleaseBase -Force
             New-Item -ItemType Directory -Path $ReleasePath -Force
             $DiffName = "kdamg_diff.bsdiff4" -f $_.Name, $Version
-            $HashName = "kdamg_hash.json" -f $_.Name, $Version
-            $HashPath = Join-Path $ReleasePath $HashName
+            $MetaName = "kdamg_meta.json" -f $_.Name, $Version
+            $MetaPath = Join-Path $ReleasePath $MetaName
             $DiffPath = Join-Path $ReleasePath $DiffName
             
             python (Join-Path $PSScriptRoot "make_release.py") $SrcData $DestData $DiffPath
             if ($LASTEXITCODE -ne 0) { throw "Diff maker failed with exit code: $LASTEXITCODE" }
-            python (Join-Path $PSScriptRoot "make_hash.py") $SrcData $DestData $Version $HashPath
-            if ($LASTEXITCODE -ne 0) { throw "Hash maker failed with exit code: $LASTEXITCODE" }
+            python (Join-Path $PSScriptRoot "make_meta.py") $SrcData $DestData $Version $MetaPath
+            if ($LASTEXITCODE -ne 0) { throw "Metadata maker failed with exit code: $LASTEXITCODE" }
         }
     }
 }

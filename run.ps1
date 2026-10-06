@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string] $Dist = "steam"
+    [string] $Dist = "steam-v4.3"
 )
 
 $root = $PSScriptRoot

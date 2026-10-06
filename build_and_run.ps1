@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string] $Cli = "UndertaleModCLI.exe",
-    [string] $Dist = "steam"
+    [string] $Dist = "steam-v4.3"
 )
 
 $root = $PSScriptRoot
