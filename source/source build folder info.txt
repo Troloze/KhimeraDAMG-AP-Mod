@@ -1,11 +1,15 @@
+Folder name should only contain alphanumeric values and '.' (period), '-' (hyphen).
+Spaces and underscores are not allowed.
 Folder name should be structured as:
   {build_name}-v{version}
   e.g.: "steam-v4.3"
 
-{build_name} will always be in lower caps and should be simplified in a way that maintains recognizability whenever possible:
-  itch.io -> itch
-  epic games store -> epic
+{build_name} will always be in lower caps, cannot contain a '-', and should be simplified to a single word:
+  Itch.io -> itch
+  Epic games store -> epic
   GOG Classic -> gog
   (although the latter two do not have a build for KhimeraDAMG)
 
 {version} is the displayed version in the title menu.
+  Always include the 'v' character before the version, otherwise building the apworld will fail
+  Version names cannot contain a '-' character.
