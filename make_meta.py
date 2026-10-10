@@ -23,7 +23,7 @@ total_size = 0
 
 item_list = []
 
-source_hash = hashlib.new("sha256")
+source_hash = hashlib.new("md5")
 
 for entry in sorted(source_root.iterdir(), key=lambda entry: entry.name):
     if not entry.is_file():
@@ -33,7 +33,7 @@ for entry in sorted(source_root.iterdir(), key=lambda entry: entry.name):
     source_hash.update(entry.name.encode("utf-8"))
 
     with open(entry, "rb") as f:
-        file_hash = hashlib.file_digest(f, "sha256")
+        file_hash = hashlib.file_digest(f, "md5")
 
     source_hash.update(file_hash.digest()) 
 
@@ -44,14 +44,14 @@ output_data["source_data_size"] = source_path.stat().st_size
 output_data["result_size"] = modded_path.stat().st_size
 
 with open(source, "rb") as f:
-    source_digest_sha256 = hashlib.file_digest(f, "sha256")
+    source_digest_md5 = hashlib.file_digest(f, "md5")
 
-output_data["source_sha256"] = source_digest_sha256.hexdigest()
+output_data["source_hash"] = source_digest_md5.hexdigest()
 
 with open(modded, "rb") as f:
-    result_digest_sha256 = hashlib.file_digest(f, "sha256")
+    result_digest_md5 = hashlib.file_digest(f, "md5")
 
-output_data["result_sha256"] = result_digest_sha256.hexdigest()
+output_data["result_hash"] = result_digest_md5.hexdigest()
 
 output_data["version"] = version
 
