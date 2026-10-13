@@ -149,8 +149,8 @@ if (!ap_communication_probe_message("ap.gi")){
 var current_heartbeat = global.ap_game_heartbeat++;
 var req = 0;
 
-if (!global.ap_has_li) req += 1;
-if (!global.ap_has_cctx) req += 2;
+if (req_li) req += 1;
+if (req_cctx) req += 2;
 
 ap_communication_set_flag("gshb", current_heartbeat);
 ap_communication_set_flag("gsack", global.ap_last_ack);

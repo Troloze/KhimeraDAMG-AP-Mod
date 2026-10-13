@@ -2,7 +2,7 @@
 [CmdletBinding()]
 param(
     [string] $Gui    = "UndertaleModTool.exe",
-    [string] $SrcVer = "steam"
+    [string] $SrcVer = "steam-v4.3"
 )
 $Source = Join-Path (Join-Path $PSScriptRoot "source") $SrcVer
 $ErrorActionPreference = 'Stop'

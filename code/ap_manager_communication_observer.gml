@@ -288,6 +288,7 @@ while (root_cctx != -1) {
     ap_misc_log("Successfully loaded cctx.");
     cctx_read_cooldown = 10; // Wait 10 ticks before reading another cctx.
     global.ap_has_cctx = 1;
+    req_cctx = 0;
     
     // Create task to load the game state after all other tasks have been consumed.
     var state_task = ds_map_create();
@@ -364,6 +365,7 @@ while (root_li != -1) {
     global.ap_location_information = ap_communication_create_li(loc_location_ids, loc_location_classifications, loc_player_ids, loc_count);
     global.ap_li_enabled = 1;
     global.ap_has_li = 1;
+    req_li = 0
     
     ap_misc_log("Successfully loaded li.");
     li_read_cooldown = 10; // Wait 10 ticks before reading another li.
@@ -558,7 +560,11 @@ if (global.ap_has_cctx) {
     if (global.ap_client_connected) {
         if (is_undefined(csc)) global.ap_fully_connected = 0;
         else global.ap_fully_connected = real(csc);
-    } else global.ap_fully_connected = 0;
+    } else {
+        // If disconnected from the client, always request a new cctx.
+        req_cctx = 1;
+        global.ap_fully_connected = 0;
+    }
 }
 
 // Maintains the observer loop

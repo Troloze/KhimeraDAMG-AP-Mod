@@ -1,22 +1,33 @@
-// ##### Moving this from the title create in order to get the nurse DLC #####
-scr_steamCheck();
+// Parameter checking:
+var can_init = 0, is_debug = 0, p_i = 0, cur_par = "";
 
-if (global.game_version == 0)
-{
-    if (steam_initialised()){
-        global.DLCnurse = steam_user_owns_dlc(485280);
+for (p_i = 1; p_i < parameter_count(); p_i++) {
+    cur_par = parameter_string(p_i);
+    switch (cur_par) {
+        case "--apw_launcher":
+            can_init = 1;
+            break;
+        case "--debug":
+            can_init = 1;
+            is_debug = 1;
+            break;
+        default:
+            break;
     }
 }
-else if (global.game_version == 1)
-{
-    global.DLCnurse = 1;
+
+if (!can_init) {
+    show_message( 
+        "This is an Archipelago Randomizer mod, and it is intended to be launched by the 'Khimera: Destroy All Moster Girls' APWorld."
+    );
+    game_end();
+    return;
 }
 
-// ##### Archipelago Randomizer Globals #####
 // Constants
 global.ap_startup_time_stamp = ap_misc_generate_time_stamp(true);
 global.ap_mod_version = "v0.1.0";
-global.AP_DEBUG = ap_is_debug();
+global.AP_DEBUG = is_debug;
 if (global.AP_DEBUG) ap_misc_log("DEBUG MODE ACTIVATED");
 global.ap_max_heartbeat_delta = 2.0;
 
@@ -112,6 +123,20 @@ global.ap_enemy_id = 0;
 global.ap_enemy_tracker = ds_map_create();
 
 global.ap_splash_queue = ds_queue_create();
+
+// Moving this from the title create in order to get the nurse DLC
+scr_steamCheck();
+
+if (global.game_version == 0)
+{
+    if (steam_initialised()){
+        global.DLCnurse = steam_user_owns_dlc(485280);
+    }
+}
+else if (global.game_version == 1)
+{
+    global.DLCnurse = 1;
+}
 
 // Cleanup leftover files
 ap_misc_cleanup();

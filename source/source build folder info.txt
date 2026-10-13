@@ -13,3 +13,7 @@ Folder name should be structured as:
 {version} is the displayed version in the title menu.
   Always include the 'v' character before the version, otherwise building the apworld will fail
   Version names cannot contain a '-' character.
+
+
+
+All files in a source folder should be exactly as it is distributed. No extra files, no modifications.  

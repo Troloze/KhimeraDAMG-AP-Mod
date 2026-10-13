@@ -7,4 +7,9 @@ $root = $PSScriptRoot
 
 $game = Join-Path (Join-Path (Join-Path $root "dist") $Dist) "khimera1.exe"
 
-Start-Process -FilePath $game -WorkingDirectory (Join-Path(Join-Path $root "dist") $Dist)
+$arguments = "--apw_launcher"
+
+# Debug Mode
+# $arguments += " --debug"
+
+Start-Process -FilePath $game -WorkingDirectory $root -ArgumentList $arguments

@@ -4,6 +4,8 @@ observer_tick = 5;
 max_incomming_tasks_per_step = 10; // To avoid stutters on large batches (like releases).
 max_outgoing_tasks_per_tick = 10;
 
+req_cctx = 1;
+req_li = 1;
 cctx_read_cooldown = 0;
 li_read_cooldown = 0;
 
