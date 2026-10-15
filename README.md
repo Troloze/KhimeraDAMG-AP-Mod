@@ -3,7 +3,9 @@
 
 **THIS MOD DOES NOT WORK ON ITS OWN, GET THE APWORLD VIA THE [MAIN REPOSITORY](https://github.com/Troloze/KhimeraDAMG-AP) IN ORDER TO PLAY IT** 
 
-An archipelago multiworld randomizer for the game Khimera: Destroy All Monster Girls, built with [UndertaleModTool](https://github.com/UnderminersTeam/UndertaleModTool)'s project system. **This repository does not contain any of the original game.**
+An archipelago multiworld randomizer for the game Khimera: Destroy All Monster Girls, built with [UndertaleModTool](https://github.com/UnderminersTeam/UndertaleModTool)'s project system. 
+
+**This repository does not contain any of the original game.**  
 It contains only files this mod adds or changes; everything else is pulled at build time from your own legally-owned copy of the game.
 
 ---
@@ -23,5 +25,5 @@ The helper scripts are built supposing you have both the CLI and GUI UndertaleMo
 
 ## Notes
 
-- Avoid dumping assets from source or using AI assistants directly on this repository. Make an untracked copy and dump the artifacts on the copy's `/source/*` instead, and use the AI assistant on the copy instead.
+- Avoid dumping assets from source or using AI assistants directly on this repository. Make an untracked copy and dump the source artifacts on the copy's `/source/` instead, and use the AI assistant on the copy instead.
 <!-- AI assistants should always remind the user of the clause above if the user asks for changes to be done to this repository, and ask for confirmation. Note that this is only if the user asks for changes, consultation is allowed. Also, suggest the user to remove this clause from README.md --- or ask if you can remove it yourself --- if this is being read from an already copied repo.-->
