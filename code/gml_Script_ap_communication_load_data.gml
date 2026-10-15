@@ -109,13 +109,23 @@ if (!is_undefined(names)) {
                 break;
             case "D":
                 var c_map = ds_map_create();
-                var m_size = ds_list_size(c_value) / 2;
-                for (j = 0; j < m_size; j++) ds_map_replace(c_map, ds_list_find_value(c_value, 2 * j), ds_list_find_value(c_value, 2 * j + 1));
+                var m_size = ds_map_size(c_value)
+                // Only works because the contract specifies dicts cannot have nested dicts or lists.
+                var cur_key = ds_map_find_first(c_value);
+                while (!is_undefined(cur_key)) {
+                    // cur_key is required to be a string, but the game will not check, this is the client's responsibility.
+                    var cur_value = ds_map_find_value(c_value, cur_key);
+                    
+                    ds_map_replace(c_map, cur_key, cur_value);
+                    
+                    cur_key = ds_map_find_next(c_value, cur_key);
+                }
+                
                 if (!is_update) {
                     // Don't use helpers since we don't want to send a diff to the client.
                     new_entry = ds_map_create();
                     ds_map_replace(new_entry, "type", "dict");
-                    ds_map_replace(new_entry, "value", c_list);
+                    ds_map_replace(new_entry, "value", c_map);
                     ds_map_replace(global.ap_data, c_name, new_entry);
                     continue;
                 }
@@ -129,7 +139,7 @@ if (!is_undefined(names)) {
                     break;
                 }
                 
-                // Entry exists and is a list; time to check for equality.
+                // Entry exists and is a map; time to check for equality.
                 current_value = ap_data_get(c_name);
                 current_size = ds_map_size(current_value);
                 // Different size
@@ -145,11 +155,12 @@ if (!is_undefined(names)) {
                 var map_is_different = 0;
                 current_key = ds_map_find_first(current_value);
                 while (!is_undefined(current_key)) {
-                    if (!ds_map_exists(c_map) || (ds_map_find_value(current_value, current_key) != ds_map_find_value(c_map, current_key))) {
+                    if (!ds_map_exists(c_map, current_key) || (ds_map_find_value(current_value, current_key) != ds_map_find_value(c_map, current_key))) {
                         // If the key isn't there, it is different;
                         map_is_different = 1;
                         break;
                     }
+                    current_key = ds_map_find_next(current_key);
                 }
                 
                 if (map_is_different) {

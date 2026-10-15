@@ -1,22 +1,19 @@
 // Parameter checking:
-var can_init = 0, is_debug = 0, p_i = 0, cur_par = "";
+var is_debug = 0, p_i = 0, cur_par = "", uid = -1;
 
 for (p_i = 1; p_i < parameter_count(); p_i++) {
     cur_par = parameter_string(p_i);
-    switch (cur_par) {
-        case "--apw_launcher":
-            can_init = 1;
-            break;
-        case "--debug":
-            can_init = 1;
-            is_debug = 1;
-            break;
-        default:
-            break;
+    if (ap_misc_string_starts_with(cur_par, "--launcher_uid=")) {
+        uid = real(string_digits(cur_par)); // string_digits strips everything before the first digits.
+        continue;
+    }
+    else if (ap_misc_string_starts_with(cur_par, "--debug")) {
+        is_debug = 1;
+        continue;
     }
 }
 
-if (!can_init) {
+if (uid < 0) { 
     show_message( 
         "This is an Archipelago Randomizer mod, and it is intended to be launched by the 'Khimera: Destroy All Moster Girls' APWorld."
     );
@@ -27,6 +24,7 @@ if (!can_init) {
 // Constants
 global.ap_startup_time_stamp = ap_misc_generate_time_stamp(true);
 global.ap_mod_version = "v0.1.0";
+global.ap_launch_uid = uid;
 global.AP_DEBUG = is_debug;
 if (global.AP_DEBUG) ap_misc_log("DEBUG MODE ACTIVATED");
 global.ap_max_heartbeat_delta = 2.0;

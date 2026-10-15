@@ -43,10 +43,17 @@ for (i = 0; i < count; i++) {
         case "D":
             var c_map = ds_map_create();
             ds_list_add(map_safety_guard, c_map);
-            var m_size = ds_list_size(c_value) / 2;
             
-            // Assumes non list. This goes against the contract, but I will deal with this later.
-            for (j = 0; j < m_size; j++) ds_map_replace(c_map, ds_list_find_value(c_value, 2 * j), ds_list_find_value(c_value, 2 * j + 1));
+            // Only works because the contract specifies dicts cannot have nested dicts or lists.
+            var cur_key = ds_map_find_first(c_value);
+            while (!is_undefined(cur_key)) {
+                // cur_key is required to be a string, but the game will not check, this is the client's responsibility.
+                var cur_value = ds_map_find_value(c_value, cur_key);
+                ds_map_replace(c_map, cur_key, cur_value);
+                
+                cur_key = ds_map_find_next(c_value, cur_key);
+            }
+                
             ds_map_replace(option_data, c_name, c_map);
             break;
         default:
