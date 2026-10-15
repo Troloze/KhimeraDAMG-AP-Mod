@@ -2,12 +2,13 @@
 [CmdletBinding()]
 param(
     [string] $Cli    = "UndertaleModCLI.exe",
-    [string] $only = "",
+    [string] $BuildOnly = "",
     [switch] $Release,
     [string] $Version = ""
 )
 
-if ($release -and ($only -ne "")) {$only = ""}
+if ($release -and ($BuildOnly -ne "")) {$BuildOnly = ""}
+if ($release -and ($Version -eq "")) {throw "Please provide a version for the release using -Version."}
 
 $OutputBase = Join-Path $PSScriptRoot "dist"
 $SourceBase = Join-Path $PSScriptRoot "source"
@@ -18,6 +19,7 @@ $ErrorActionPreference = 'Stop'
 
 $Folders = (Get-ChildItem -Path $SourceBase -Directory)
 $FolderCount = $Folders.Length
+if ($BuildOnly -ne "" -and ($BuildOnly -notin $Folders.Name)) {throw "Provide a valid build name when using -BuildOnly."}
 
 if ($FolderCount -eq 0) {throw "$SourceBase has no children."}
 
@@ -29,7 +31,7 @@ $Folders | ForEach-Object {
     $Source = $_.FullName
     $cliPath = $Cli
 
-    if (($only -eq "") -or ($only -eq $_.Name)) {
+    if (($BuildOnly -eq "") -or ($BuildOnly -eq $_.Name)) {
         if (-not (Test-Path $Output)) {
             Write-Host "Creating playtest copy at $Output ..." -ForegroundColor Cyan
             New-Item -ItemType Directory -Path $Output -Force | Out-Null
@@ -53,16 +55,15 @@ $Folders | ForEach-Object {
         Write-Host ("Build OK - {0:N0} bytes" -f (Get-Item $DestData).Length) -ForegroundColor Green
 
         if ($Release) {
-            if ($Version -eq "") {throw "Please provide a version"}
             $ReleasePath = Join-Path $ReleaseFolder $_.Name
             #New-Item -ItemType Directory -Path $ReleaseBase -Force
-            New-Item -ItemType Directory -Path $ReleasePath -Force
-            $DiffName = "kdamg_diff.bsdiff4" -f $_.Name, $Version
-            $MetaName = "kdamg_meta.json" -f $_.Name, $Version
+            New-Item -ItemType Directory -Path $ReleasePath -Force | Out-Null
+            $DiffName = "kdamg_diff.bsdiff4"
+            $MetaName = "kdamg_meta.json"
             $MetaPath = Join-Path $ReleasePath $MetaName
             $DiffPath = Join-Path $ReleasePath $DiffName
             
-            python (Join-Path $PSScriptRoot "make_release.py") $SrcData $DestData $DiffPath
+            python (Join-Path $PSScriptRoot "make_diff.py") $SrcData $DestData $DiffPath
             if ($LASTEXITCODE -ne 0) { throw "Diff maker failed with exit code: $LASTEXITCODE" }
             python (Join-Path $PSScriptRoot "make_meta.py") $SrcData $DestData $Version $MetaPath
             if ($LASTEXITCODE -ne 0) { throw "Metadata maker failed with exit code: $LASTEXITCODE" }
@@ -71,6 +72,6 @@ $Folders | ForEach-Object {
 }
 
 if ($Release) {
-    Compress-Archive -Path ("{0}\*" -f $ReleaseFolder) -DestinationPath ("{0}.zip" -f $ReleaseFolder) -Force
-    Remove-Item -Path $ReleaseFolder -Recurse -Force
+    python (Join-Path $PSScriptRoot "make_release.py") $ReleaseFolder
+    if ($LASTEXITCODE -ne 0) { throw "Release maker failed with exit code: $LASTEXITCODE" }
 }
