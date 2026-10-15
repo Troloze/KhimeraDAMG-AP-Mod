@@ -7,7 +7,7 @@ var csc = undefined;
 
 root_cctx = ap_communication_get_message("ap.cctx");
 root_li = ap_communication_get_message("ap.li");
-root_hi = ap_communication_get_message("ap.hi");
+if (global.ap_has_cctx) root_hi = ap_communication_get_message("ap.hi");
 cshb = ap_communication_get_flag("cshb");
 csc = ap_communication_get_flag("csc");
 
@@ -64,7 +64,7 @@ while (root_cctx != -1) {
     var meta_slot_name = ds_map_find_value(meta, "slot_name");
     var meta_seed = ds_map_find_value(meta, "seed");
     var meta_options = ds_map_find_value(meta, "options");
-    var meta_generation_info = ds_map_find_value(meta, "generation_info");
+    var meta_generation_information = ds_map_find_value(meta, "generation_information");
     
     if (is_undefined(meta_ap_version)) {
         ap_misc_log_critical("Failed to load cctx: archipelago_version field from meta is undefined.");
@@ -122,11 +122,11 @@ while (root_cctx != -1) {
     var meta_gen_types = undefined;
     var meta_gen_values = undefined;
     var meta_gen_count = undefined;
-    if (!is_undefined(meta_generation_info)) {
-        meta_gen_names = ds_map_find_value(meta_generation_info, "names");
-        meta_gen_types = ds_map_find_value(meta_generation_info, "types");
-        meta_gen_values = ds_map_find_value(meta_generation_info, "values");
-        meta_gen_count = ds_map_find_value(meta_generation_info, "count");
+    if (!is_undefined(meta_generation_information)) {
+        meta_gen_names = ds_map_find_value(meta_generation_information, "names");
+        meta_gen_types = ds_map_find_value(meta_generation_information, "types");
+        meta_gen_values = ds_map_find_value(meta_generation_information, "values");
+        meta_gen_count = ds_map_find_value(meta_generation_information, "count");
     
         if (is_undefined(meta_gen_names)) {
             ap_misc_log_critical("Failed to load cctx: names field from generation information is undefined.");
@@ -227,7 +227,6 @@ while (root_cctx != -1) {
     if (!is_undefined(global.ap_slot_name) && !is_undefined(global.ap_seed)) {
         if (meta_slot_name != global.ap_slot_name || meta_seed != global.ap_seed) {
             // Attempt to change slots mid gameplay, handle accordingly later.
-            
         }
     }
     global.ap_slot_name = meta_slot_name;
@@ -242,7 +241,7 @@ while (root_cctx != -1) {
     
     var gen_info;
     // Slot data:
-    if (!is_undefined(meta_generation_info) && is_undefined(global.ap_gen_info)) {
+    if (!is_undefined(meta_generation_information) && is_undefined(global.ap_gen_info)) {
         gen_info = ap_communication_create_option_data(meta_gen_names, meta_gen_types, meta_gen_values, meta_gen_count);
         if (gen_info != -1) global.ap_gen_info = gen_info;
     }
@@ -253,8 +252,7 @@ while (root_cctx != -1) {
     // Session:
     if (!is_undefined(session)) {
         if (!is_undefined(session_last_ack)) {
-            global.ap_last_ack = real(session_last_ack);
-            ap_misc_log("Last ack: " + string(session_last_ack));
+            global.ap_last_ack = max(global.ap_last_ack, real(session_last_ack));
         }
         if (!is_undefined(session_is_win)) {
             if (!global.ap_is_win) global.ap_is_win = real(session_is_win);
@@ -327,6 +325,7 @@ while (root_li != -1) {
         global.ap_li_enabled = 0;
         global.ap_location_information = undefined;
         global.ap_has_li = 1;
+        req_li = 0;
         ap_misc_log("Successfully loaded li.");
         break;
     }
@@ -395,7 +394,7 @@ while (root_hi != -1) {
     var item_list = ds_map_find_value(hi, "item_list");
     var location_ids = ds_map_find_value(hi, "location_ids");
     var death_ack = ds_map_find_value(hi, "death_ack");
-    var data_ack = ds_map_find_value(hi, "data_ack");
+    var data_acks = ds_map_find_value(hi, "data_acks");
     
     var msg_senders;
     var msg_messages;
@@ -517,13 +516,14 @@ while (root_hi != -1) {
         ds_map_replace(death_ack_task, "id", real(death_ack));
         ds_queue_enqueue(global.ap_incomming_tasks, death_ack_task);
     }
-    if (!is_undefined(data_ack)) {
-        var data_ack_size = ds_list_size(data_ack);
-        var data_ack_i;
-        for (data_ack_i = 0; data_ack_i < data_ack_size; data_ack_i++) {
+    if (!is_undefined(data_acks)) {
+        var data_acks_size = ds_list_size(data_acks);
+        var data_acks_i;
+        for (data_acks_i = 0; data_acks_i < data_acks_size; data_acks_i++) {
+            // Individual data ack tasks.
             var data_ack_task = ds_map_create();
             ds_map_replace(data_ack_task, "type", "data_ack");
-            ds_map_replace(data_ack_task, "id", ds_list_find_value(data_ack, data_ack_i));
+            ds_map_replace(data_ack_task, "id", ds_list_find_value(data_acks, data_acks_i));
             ds_queue_enqueue(global.ap_incomming_tasks, data_ack_task);
         }
     }

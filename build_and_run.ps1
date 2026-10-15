@@ -9,5 +9,5 @@ $root = $PSScriptRoot
 $build = Join-Path $root "build.ps1"
 $run = Join-Path $root "run.ps1"
 
-& $build -Cli $Cli -only $Dist
+& $build -Cli $Cli -BuildOnly $Dist
 & $run -dist $Dist
